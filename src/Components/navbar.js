@@ -6,8 +6,8 @@ function Navbar() {
       <Link to="/" className="navbar-brand">Packing Helper</Link>
   
       <div className="navbar-links">
-        <Link to="/">Dashboard</Link>
         <Link to="/tasks">Tasks</Link>
+        <Link to="/all-tasks">All Tasks</Link>
         <Link to="/pictures">Pictures</Link>
         <Link to="/notifications">Notifications</Link>
         <Link to="/move-trip-selector">Moves &amp; Trips</Link>

@@ -7,8 +7,8 @@ import Home from './Components/home';
 import Tasks from './Components/tasks';
 import Pictures from './Components/pictures';
 import Notifications from './Components/notifications';
-import TripSettings from './Components/trip-setting';
 import MoveTripSelector from './Components/move-trip-selector';
+import AllTasks from './Components/AllTasks';
 import './App.css';
 
 function App() {
@@ -24,8 +24,8 @@ function App() {
           <Route path="/tasks" element={<Tasks />} />
           <Route path="/pictures" element={<Pictures />} />
           <Route path="/notifications" element={<Notifications />} />
-          <Route path="/trip-settings" element={<TripSettings />} />
           <Route path="/move-trip-selector" element={<MoveTripSelector />} />
+          <Route path="/all-tasks" element={<AllTasks />} />
         </Routes>
       </div>
     </Router>

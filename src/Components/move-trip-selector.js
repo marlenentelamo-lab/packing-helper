@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import Tasks from "./tasks";
 
-const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:3004/api";
+const API_BASE = process.env.REACT_APP_API_URL || "http://localhost:3004/api";
 
 function MoveTripSelector() {
   const [type, setType] = useState("move"); // "move" or "trip"
