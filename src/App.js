@@ -1,24 +1,34 @@
-import logo from './logo.svg';
+
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Login from './Components/Login'; 
+import Signup from './Components/Signup';
+import Navbar from './Components/navbar';
+import Home from './Components/home';
+import Tasks from './Components/tasks';
+import Pictures from './Components/pictures';
+import Notifications from './Components/notifications';
+import TripSettings from './Components/trip-setting';
+import MoveTripSelector from './Components/move-trip-selector';
 import './App.css';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <div className="App">
+        <Navbar />
+
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/tasks" element={<Tasks />} />
+          <Route path="/pictures" element={<Pictures />} />
+          <Route path="/notifications" element={<Notifications />} />
+          <Route path="/trip-settings" element={<TripSettings />} />
+          <Route path="/move-trip-selector" element={<MoveTripSelector />} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 
