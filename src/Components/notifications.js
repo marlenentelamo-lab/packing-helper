@@ -142,7 +142,7 @@ export default function NotificationBell({ apiBaseUrl = '' }) {
       {isOpen && (
         <div className="notification-panel" ref={panelRef} role="menu">
           <div className="panel-header">
-            <span className="panel-title">Notifications</span>
+            <span className="notif-panel-title">Notifications</span>
             {unreadCount > 0 && (
               <button className="mark-all-button" onClick={handleMarkAllAsRead}>
                 Mark all read
