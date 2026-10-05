@@ -580,3 +580,54 @@ body {
 .item-delete:hover {
   color: var(--color-danger);
 }
+
+.auth-page {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 24px;
+  background: var(--color-bg);
+  border-radius: 12px;
+  color: var(--color-text);
+  font-family: inherit;
+  text-align: center;
+}
+
+.sign-up-title {
+  margin: 0 0 16px;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.sign-up-button {
+  width: 100%;
+  text-align: center;
+}
+
+.auth-title {
+  margin: 0 0 16px;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.auth-submit-button {
+  width: 100%;
+  text-align: center;
+}
+
+.auth-switch {
+  margin-top: 16px;
+  font-size: 13.5px;
+  color: var(--color-text-muted);
+}
+
+.auth-switch a {
+  color: var(--color-accent);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.auth-switch a:hover {
+  text-decoration: underline;
+}

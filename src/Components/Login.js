@@ -29,34 +29,37 @@ function Login() {
 
   return (
     <section>
-      <h1>Login</h1>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="username">Username</label>
-          <input
-            id="username"
-            name="username"
-            value={formData.username}
-            onChange={handleChange}
-          />
-        </div>
-        <div>
-          <label htmlFor="password">Password</label>
-          <input
-            id="password"
-            type="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-          />
-        </div>
-        <button type="submit">Login</button>
-      </form>
+      <div className="auth-page">
+  <h1 className="auth-title">Login</h1>
+  <form className="item-form" onSubmit={handleSubmit}>
+    <div className="form-field">
+      <label htmlFor="username">Username</label>
+      <input
+        id="username"
+        name="username"
+        className="field-input"
+        value={formData.username}
+        onChange={handleChange}
+      />
+    </div>
+    <div className="form-field">
+      <label htmlFor="password">Password</label>
+      <input
+        id="password"
+        type="password"
+        name="password"
+        className="field-input"
+        value={formData.password}
+        onChange={handleChange}
+      />
+    </div>
+    <button type="submit" className="btn btn-primary auth-submit-button">Login</button>
+  </form>
 
-      <p>
-        Need an account? <Link to="/signup">Sign up</Link>
-      </p>
-
+  <p className="auth-switch">
+    Need an account? <Link to="/signup">Sign up</Link>
+  </p>
+</div>
       {message && <p style={{ color: "green" }}>{message}</p>}
       {error && <p style={{ color: "crimson" }}>{error}</p>}
     </section>

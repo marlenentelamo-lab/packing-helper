@@ -33,50 +33,53 @@ function Signup() {
   };
 
   return (
-    <section>
-      <h1 className="sign-up-title">Sign Up</h1>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="name" className="name-title">Name</label>
-          <input
-            id="name"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-          />
-        </div>
+    <div className="auth-page">
+  <h1 className="auth-title">Sign Up</h1>
+  <form className="item-form" onSubmit={handleSubmit}>
+    <div className="form-field">
+      <label htmlFor="name">Name</label>
+      <input
+        id="name"
+        name="name"
+        className="field-input"
+        value={formData.name}
+        onChange={handleChange}
+      />
+    </div>
 
-        <div>
-          <label htmlFor="email" className="email-title">Email</label>
-          <input
-            id="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-          />
-        </div>
+    <div className="form-field">
+      <label htmlFor="email">Email</label>
+      <input
+        id="email"
+        name="email"
+        className="field-input"
+        value={formData.email}
+        onChange={handleChange}
+      />
+    </div>
 
-        <div>
-          <label htmlFor="password" className="password-title">Password</label>
-          <input
-            id="password"
-            name="password"
-            type="password"
-            value={formData.password}
-            onChange={handleChange}
-          />
-        </div>
+    <div className="form-field">
+      <label htmlFor="password">Password</label>
+      <input
+        id="password"
+        name="password"
+        type="password"
+        className="field-input"
+        value={formData.password}
+        onChange={handleChange}
+      />
+    </div>
 
-        <button type="submit" className="sign-up-button">Sign Up</button>
-      </form>
+    <button type="submit" className="btn btn-primary auth-submit-button">Sign Up</button>
+  </form>
 
-      <p>
-        Already have an account? <Link to="/login">Login</Link>
-      </p>
+  <p className="auth-switch">
+    Already have an account? <Link to="/login">Login</Link>
+  </p>
 
-      {message && <p style={{ color: "green" }}>{message}</p>}
-      {error && <p style={{ color: "crimson" }}>{error}</p>}
-    </section>
+  {message && <p className="panel-state" style={{ color: "#1e7a3f" }}>{message}</p>}
+  {error && <p className="panel-error">{error}</p>}
+</div>
   );
 }
 
