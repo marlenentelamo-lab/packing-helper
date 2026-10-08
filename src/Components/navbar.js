@@ -1,6 +1,20 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import api from "../api";
 
-function Navbar() {
+function Navbar({ user, setUser }) {
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      await api.logout();
+    } catch (error) {
+      console.error("Logout failed:", error);
+    } finally {
+      setUser(null);
+      navigate("/login");
+    }
+  };
+
   return (
     <nav className="navbar">
       <Link to="/" className="navbar-brand">Packing Helper</Link>
@@ -11,10 +25,18 @@ function Navbar() {
         <Link to="/pictures">Pictures</Link>
         <Link to="/notifications">Notifications</Link>
         <Link to="/move-trip-selector">Moves &amp; Trips</Link>
-        <Link to="/login">Login</Link>   
+
+        {user ? (
+          <>
+            <span className="navbar-user">Hi, {user.name || user.email}</span>
+            <button type="button" className="btn btn-secondary" onClick={handleLogout}>Logout</button>
+          </>
+        ) : (
+          <Link to="/login">Login</Link>
+        )}
       </div>
     </nav>  
-);
+  );
 }
 
 export default Navbar;

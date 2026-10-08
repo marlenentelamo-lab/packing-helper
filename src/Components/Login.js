@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../api";
 
-function Login() {
+function Login({ onAuthSuccess }) {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({ username: "", password: "" });
   const [message, setMessage] = useState("");
@@ -20,6 +20,9 @@ function Login() {
 
     try {
       const response = await api.post("/login", formData);
+      if (onAuthSuccess) {
+        onAuthSuccess(response.user || null);
+      }
       setMessage(response.message || "Logged in successfully");
       navigate("/");
     } catch (err) {
@@ -33,12 +36,12 @@ function Login() {
   <h1 className="auth-title">Login</h1>
   <form className="item-form" onSubmit={handleSubmit}>
     <div className="form-field">
-      <label htmlFor="username">Username</label>
+      <label htmlFor="email">Email</label>
       <input
-        id="username"
-        name="username"
+        id="email"
+        name="email"
         className="field-input"
-        value={formData.username}
+        value={formData.email}
         onChange={handleChange}
       />
     </div>

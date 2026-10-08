@@ -2,6 +2,18 @@ import { useEffect, useState } from "react";
 
 const API_BASE = process.env.REACT_APP_API_URL || "http://localhost:3004/api";
 
+function isOverdue(task) {
+  if (!task?.due_date || task.completion_status) {
+    return false;
+  }
+
+  const dueDate = new Date(task.due_date);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  return dueDate < today;
+}
+
 function Task({ moveId, tripId }) {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -55,7 +67,6 @@ function Task({ moveId, tripId }) {
       setEditingId(null);
     };
 
-  // CREATE
   const addTask = async (e) => {
     e.preventDefault();
 
@@ -165,83 +176,109 @@ function Task({ moveId, tripId }) {
       }
     };
 
-    return (
-    <div>
-      <h1>Tasks</h1>
+return (
+  <div className="tasks-page">
+    <h1 className="tasks-title">Tasks</h1>
 
-      {error && <p>{error}</p>}
+    {error && <p className="panel-error">{error}</p>}
 
-      {/* TASK LIST */}
-      <form onSubmit={editingId ? saveTask : addTask}>
-        <div>
-          <label>Task:</label>
-          <input
-            type="text"
-            value={taskName}
-            onChange={(e) => setTaskName(e.target.value)}
-            placeholder="Enter task"
-          />
-        </div>
+    <form className="task-form" onSubmit={editingId ? saveTask : addTask}>
+      <div className="form-field task-form-grow">
+        <label htmlFor="task-name-input">Task</label>
+        <input
+          id="task-name-input"
+          className="field-input"
+          type="text"
+          value={taskName}
+          onChange={(e) => setTaskName(e.target.value)}
+          placeholder="Enter task"
+        />
+      </div>
 
-        <div>
-          <label>Due Date:</label>
-          <input
-            type="date"
-            value={dueDate}
-            onChange={(e) => setDueDate(e.target.value)}
-          />
-        </div>
+      <div className="form-field task-form-date">
+        <label htmlFor="task-due-date">Due date</label>
+        <input
+          id="task-due-date"
+          className="field-input"
+          type="date"
+          value={dueDate}
+          onChange={(e) => setDueDate(e.target.value)}
+        />
+      </div>
 
-        <button type="submit">{editingId ? "Save Task" : "Add Task"}</button>
+      <div className="task-form-actions">
+        <button type="submit" className="btn btn-primary">
+          {editingId ? "Save Task" : "Add Task"}
+        </button>
 
         {editingId && (
-          <button type="button" onClick={resetForm}>
+          <button type="button" className="btn btn-secondary" onClick={resetForm}>
             Cancel
           </button>
         )}
-      </form>
+      </div>
+    </form>
 
-      <hr />
-
-      {/* TASK LIST */}
-      {loading ? (
-        <p>Loading tasks...</p>
-      ) : tasks.length === 0 ? (
-        <p>No tasks yet.</p>
-      ) : (
-        tasks.map((task) => (
-          <div key={task.id}>
-            <input
-              type="checkbox"
-              checked={task.completion_status}
-              onChange={() => toggleCompleted(task)}
-            />
-
-            <h3
-              style={{
-                textDecoration: task.completion_status
-                  ? "line-through"
-                  : "none",
-              }}
+    {/* TASK LIST */}
+    {loading ? (
+      <p className="panel-state">Loading tasks...</p>
+    ) : tasks.length === 0 ? (
+      <p className="panel-state">No tasks yet.</p>
+    ) : (
+      <div className="task-list">
+        {tasks.map((task) => {
+          const overdue = isOverdue(task);
+          return (
+            <div
+              key={task.id}
+              className={`task-item${task.completion_status ? " task-item-done" : ""}${
+                overdue ? " task-item-overdue" : ""
+              }`}
             >
-              {task.task_name}
-            </h3>
+              <input
+                type="checkbox"
+                className="task-checkbox"
+                aria-label={`Mark "${task.task_name}" as completed`}
+                checked={task.completion_status}
+                onChange={() => toggleCompleted(task)}
+              />
 
-            <p>Due: {task.due_date ? task.due_date.slice(0, 10) : "—"}</p>
+              <div className="task-content">
+                <h3
+                  className={`task-name${task.completion_status ? " task-name-done" : ""}`}
+                >
+                  {task.task_name}
+                </h3>
 
-            <p>
-              Status: {task.completion_status ? "Completed" : "Not completed"}
-            </p>
+                <p className={`task-meta${overdue ? " task-meta-overdue" : ""}`}>
+                  Due: {task.due_date ? task.due_date.slice(0, 10) : "—"}
+                  {overdue && " (overdue)"}
+                </p>
 
-            <button onClick={() => editTask(task)}>Edit</button>
-            <button onClick={() => deleteTask(task.id)}>Delete</button>
+                <p className="task-meta">
+                  Status: {task.completion_status ? "Completed" : "Not completed"}
+                </p>
+              </div>
 
-            <hr />
-          </div>
-        ))
-      )}
-    </div>
-  );
+              <div className="task-actions">
+                <button type="button" className="btn btn-edit" onClick={() => editTask(task)}>
+                  Edit
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-delete"
+                  onClick={() => deleteTask(task.id)}
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    )}
+  </div>
+);
 }
 
 export default Task;

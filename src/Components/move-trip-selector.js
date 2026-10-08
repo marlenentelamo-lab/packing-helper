@@ -126,7 +126,7 @@ function MoveTripSelector() {
 
   return (
     <div className="move-trip-panel">
-  <h1 className="panel-title">Packing Helper</h1>
+  <h1 className="panel-title">Moves & Trips</h1>
 
   {/* TYPE SWITCH */}
   <div className="type-switch">
