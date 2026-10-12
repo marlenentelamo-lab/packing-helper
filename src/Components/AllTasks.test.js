@@ -108,7 +108,7 @@ test('edits a task and can reassign it to a move', async () => {
 
   expect(await screen.findByText('Pack two suitcases')).toBeInTheDocument();
   const putCall = fetchMock.mock.calls.find(([, options]) => options?.method === 'PUT');
-  expect(putCall[0]).toBe('http://localhost:3004/api/tasks/11');
+  expect(putCall[0]).toBe('/api/tasks/11');
   expect(JSON.parse(putCall[1].body)).toEqual({
     task_name: 'Pack two suitcases',
     due_date: '2026-10-06',

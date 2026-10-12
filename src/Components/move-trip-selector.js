@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import Tasks from "./tasks";
-
-const API_BASE = process.env.REACT_APP_API_URL || "http://localhost:3004/api";
+import { api } from "../api";
 
 function MoveTripSelector() {
   const [type, setType] = useState("move"); // "move" or "trip"
@@ -27,13 +26,7 @@ function MoveTripSelector() {
       setNewDate("");
 
       try {
-        const res = await fetch(`${API_BASE}/${endpoint}`);
-
-        if (!res.ok) {
-          throw new Error(`Failed to load ${endpoint}.`);
-        }
-
-        const data = await res.json();
+        const data = await api.get(`/${endpoint}`);
         setItems(data);
       } catch (err) {
         console.error(err);
@@ -58,23 +51,10 @@ function MoveTripSelector() {
     const action = isEditing ? "update" : "create";
 
     try {
-      const res = await fetch(
-        `${API_BASE}/${endpoint}${isEditing ? `/${editingId}` : ""}`,
-        {
-          method: isEditing ? "PUT" : "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            name: newName,
-            [dateField]: newDate,
-          }),
-        },
-      );
-
-      if (!res.ok) {
-        throw new Error(`Failed to ${action} ${type}.`);
-      }
-
-      const savedItem = await res.json();
+      const body = { name: newName, [dateField]: newDate };
+      const savedItem = isEditing
+        ? await api.put(`/${endpoint}/${editingId}`, body)
+        : await api.post(`/${endpoint}`, body);
       if (isEditing) {
         setItems(items.map((item) => (item.id === editingId ? savedItem : item)));
         setEditingId(null);
@@ -103,14 +83,7 @@ function MoveTripSelector() {
 
   const deleteItem = async (item) => {
     try {
-      const res = await fetch(`${API_BASE}/${endpoint}/${item.id}`, {
-        method: "DELETE",
-      });
-
-      if (!res.ok) {
-        throw new Error(`Failed to delete ${type}.`);
-      }
-
+      await api.del(`/${endpoint}/${item.id}`);
       setItems(items.filter((currentItem) => currentItem.id !== item.id));
       if (selectedId === item.id) {
         setSelectedId(null);

@@ -39,7 +39,9 @@ test('loads notifications and displays the unread count when opened', async () =
   const bell = await screen.findByRole('button', {
     name: 'Notifications, 1 unread',
   });
-  expect(global.fetch).toHaveBeenCalledWith('/api/notifications');
+  expect(global.fetch).toHaveBeenCalledWith('/api/notifications', {
+    credentials: 'include',
+  });
 
   fireEvent.click(bell);
 
@@ -61,9 +63,11 @@ test('dismisses a notification without marking it as read', async () => {
   await waitFor(() => {
     expect(global.fetch).toHaveBeenCalledWith('/api/notifications/1', {
       method: 'DELETE',
+      credentials: 'include',
     });
   });
   expect(global.fetch).not.toHaveBeenCalledWith('/api/notifications/1/read', {
     method: 'PATCH',
+    credentials: 'include',
   });
 });

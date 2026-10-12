@@ -7,6 +7,7 @@ const trip = { id: 7, name: 'Summer holiday', trip_date: '2026-12-01' };
 function jsonResponse(data, ok = true) {
   return {
     ok,
+    headers: { get: () => 'application/json' },
     json: async () => data,
   };
 }
@@ -37,10 +38,11 @@ test('edits a move using its update endpoint', async () => {
   fireEvent.click(screen.getByRole('button', { name: 'Save Move' }));
 
   await screen.findByRole('button', { name: 'Edit New home' });
-  expect(fetchMock).toHaveBeenCalledWith('http://localhost:3004/api/moves/3', {
+  expect(fetchMock).toHaveBeenCalledWith('/api/moves/3', {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ name: 'New home', target_date: '2026-11-15' }),
+    credentials: 'include',
   });
 });
 
@@ -66,8 +68,10 @@ test('deletes a trip and removes it from the list', async () => {
   fireEvent.click(screen.getByRole('button', { name: 'Delete Summer holiday' }));
 
   await waitFor(() => {
-    expect(fetchMock).toHaveBeenCalledWith('http://localhost:3004/api/trips/7', {
+    expect(fetchMock).toHaveBeenCalledWith('/api/trips/7', {
       method: 'DELETE',
+      headers: {},
+      credentials: 'include',
     });
   });
   expect(await screen.findByText('No trips yet. Add one above.')).toBeInTheDocument();

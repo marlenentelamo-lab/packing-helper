@@ -1,6 +1,6 @@
 import {  useState, useEffect } from "react";
 
-const API_BASE = process.env.REACT_APP_API_URL || "http://localhost:3004/api";
+const API_BASE = "/api";
 
 function AllTasks() {
     const [tasks, setTasks] = useState([]);
@@ -20,9 +20,9 @@ function AllTasks() {
 
         try {
             const [tasksRes, movesRes, tripsRes] = await Promise.all([
-                fetch(`${API_BASE}/tasks`),
-                fetch(`${API_BASE}/moves`),
-                fetch(`${API_BASE}/trips`),
+                fetch(`${API_BASE}/tasks`, { credentials: "include" }),
+                fetch(`${API_BASE}/moves`, { credentials: "include" }),
+                fetch(`${API_BASE}/trips`, { credentials: "include" }),
             ]);
 
             if (!tasksRes.ok || !movesRes.ok || !tripsRes.ok) {
@@ -67,6 +67,7 @@ function AllTasks() {
                 `${API_BASE}/tasks${isEditing ? `/${editingTask.id}` : ""}`,
                 {
                 method: isEditing ? "PUT" : "POST",
+                credentials: "include",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     task_name: taskName,
@@ -107,6 +108,7 @@ function AllTasks() {
         try {
             const res = await fetch(`${API_BASE}/tasks/${task.id}`, {
                 method: "PUT",
+                credentials: "include",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     task_name: task.task_name,
@@ -130,6 +132,7 @@ function AllTasks() {
         try {
             const res = await fetch(`${API_BASE}/tasks/${taskId}`, {
                 method: "DELETE",
+                credentials: "include",
             });
 
             if (!res.ok) {

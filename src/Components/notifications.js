@@ -26,7 +26,7 @@ export default function NotificationBell({ apiBaseUrl = '' }) {
 
   const fetchNotifications = useCallback(async () => {
     try {
-      const res = await fetch(`${apiBaseUrl}/api/notifications`);
+      const res = await fetch(`${apiBaseUrl}/api/notifications`, { credentials: 'include' });
       if (!res.ok) throw new Error('Request failed');
       const data = await res.json();
       setNotifications(data);
@@ -70,6 +70,7 @@ export default function NotificationBell({ apiBaseUrl = '' }) {
     try {
       const res = await fetch(`${apiBaseUrl}/api/notifications/${notificationId}/read`, {
         method: 'PATCH',
+        credentials: 'include',
       });
       if (!res.ok) throw new Error('Failed to mark notification as read');
       fetchNotifications();
@@ -82,6 +83,7 @@ export default function NotificationBell({ apiBaseUrl = '' }) {
     try {
       const res = await fetch(`${apiBaseUrl}/api/notifications/read`, {
         method: 'PATCH',
+        credentials: 'include',
       });
       if (!res.ok) throw new Error('Failed to mark all notifications as read');
       fetchNotifications();
@@ -96,6 +98,7 @@ export default function NotificationBell({ apiBaseUrl = '' }) {
     try {
       const res = await fetch(`${apiBaseUrl}/api/notifications/${notificationId}`, {
         method: 'DELETE',
+        credentials: 'include',
       });
       if (!res.ok) throw new Error('Failed to delete notification');
       fetchNotifications();
@@ -192,5 +195,4 @@ export default function NotificationBell({ apiBaseUrl = '' }) {
     </div>
   );
 }
-
 

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-const API_BASE = process.env.REACT_APP_API_URL || "http://localhost:3004/api";
+const API_BASE = "/api";
 
 function isOverdue(task) {
   if (!task?.due_date || task.completion_status) {
@@ -42,7 +42,9 @@ function Task({ moveId, tripId }) {
       setError("");
 
       try {
-        const res = await fetch(`${API_BASE}/tasks?${parentQuery}`);
+        const res = await fetch(`${API_BASE}/tasks?${parentQuery}`, {
+          credentials: "include",
+        });
 
         if (!res.ok) {
           throw new Error("Failed to load tasks.");
@@ -78,6 +80,7 @@ function Task({ moveId, tripId }) {
     try {
       const res = await fetch(`${API_BASE}/tasks`, {
         method: "POST",
+        credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           task_name: taskName,
@@ -105,6 +108,7 @@ function Task({ moveId, tripId }) {
       try {
         const res = await fetch(`${API_BASE}/tasks/${id}`, {
           method: "DELETE",
+          credentials: "include",
         });
 
         if (!res.ok) {
@@ -122,6 +126,7 @@ function Task({ moveId, tripId }) {
       try {
         const res = await fetch(`${API_BASE}/tasks/${task.id}`, {
           method: "PUT",
+          credentials: "include",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             task_name: task.task_name,
@@ -154,6 +159,7 @@ function Task({ moveId, tripId }) {
       try {
         const res = await fetch(`${API_BASE}/tasks/${editingId}`, {
           method: "PUT",
+          credentials: "include",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             task_name: taskName,
