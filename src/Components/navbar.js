@@ -17,10 +17,10 @@ function Navbar({ user, setUser }) {
 
   return (
     <nav className="navbar">
-      <Link to="/" className="navbar-brand">Packing Helper</Link>
+      <Link to="/dashboard" className="navbar-brand">Packing Helper</Link>
   
       <div className="navbar-links">
-        <Link to="/tasks">Tasks</Link>
+        <Link to="/dashboard">Dashboard</Link>
         <Link to="/all-tasks">All Tasks</Link>
         <Link to="/pictures">Pictures</Link>
         <Link to="/notifications">Notifications</Link>

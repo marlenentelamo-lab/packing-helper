@@ -15,9 +15,6 @@
   --color-link-hover: #0059CF;
 }
 
-/* ============================
-   2. Global / App Shell
-   ============================ */
 html,
 body {
   margin: 0;
@@ -69,12 +66,6 @@ body {
   text-decoration: underline;
   color: var(--color-link-hover);
 }
-
-/* ============================
-   3. Base
-   (shared across components — keep anything used in 2+ places here,
-   not duplicated into a component's own section below)
-   ============================ */
 
 .form-field {
   display: flex;
@@ -158,10 +149,6 @@ body {
   background: var(--color-danger);
   color: var(--color-danger-text);
 }
-
-/* ============================
-   4. Task List
-   ============================ */
 
 .task-list {
   max-width: 520px;
@@ -263,8 +250,6 @@ body {
   color: var(--color-text-muted);
 }
 
-/* .btn-edit / .btn-delete base styles come from the Base section above;
-   grid placement is specific to this layout, so it's set here. */
 .task-item .btn-edit,
 .task-item .btn-delete {
   grid-row: 1;
@@ -278,12 +263,8 @@ body {
   grid-column: 4;
 }
 
-/* ============================
-   5. Move/Trip Panel
-   ============================ */
-
 .move-trip-panel {
-  max-width: 560px;
+  max-width: 1000px;
   margin: 0 auto;
   padding: 24px;
   background: var(--color-bg);
@@ -442,18 +423,19 @@ body {
 }
 
 .notification-panel {
-  position: absolute;
-  top: 48px;
-  right: 0;
-  width: 320px;
-  max-height: 420px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(650px, calc(100vw - 32px));
+  max-height: min(550px, calc(100vh - 32px));
   display: flex;
   flex-direction: column;
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: 10px;
   box-shadow: 0 8px 24px rgba(0, 33, 71, 0.18);
-  z-index: 50;
+  z-index: 60;
   overflow: hidden;
 }
 
@@ -465,9 +447,6 @@ body {
   border-bottom: 1px solid var(--color-border);
 }
 
-/* Renamed from "panel-title" in the component — that name is already
-   used by the page's big <h1> in section 5. Update the span's
-   className in NotificationBell.jsx to match: notif-panel-title */
 .notif-panel-title {
   font-size: 14px;
   font-weight: 600;
@@ -809,7 +788,7 @@ body {
 }
 
 .tasks-page {
-  max-width: 560px;
+  max-width: 1000px;
   margin: 0 auto;
   padding: 24px;
   background: var(--color-bg);
@@ -858,6 +837,11 @@ body {
   gap: 10px;
 }
 
+.all-tasks-page {
+  max-width: 1000px;
+  padding: 24px;
+}
+
 .task-item {
   display: grid;
   grid-template-columns: auto 1fr auto;
@@ -887,7 +871,7 @@ body {
 }
 
 .task-content {
-  min-width: 0; /* lets long task names wrap instead of stretching the card */
+  min-width: 0;
 }
 
 .task-name {
@@ -917,7 +901,6 @@ body {
   gap: 8px;
 }
 
-/* --- Small screens: buttons drop to their own row under the task --- */
 @media (max-width: 480px) {
   .tasks-page {
     padding: 16px;
@@ -934,4 +917,485 @@ body {
   .task-form-date {
     flex: 1 1 100%;
   }
+}
+
+.dashboard {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 24px;
+  background: var(--color-bg);
+  border-radius: 12px;
+  color: var(--color-text);
+  font-family: inherit;
+}
+
+.dash-title {
+  margin: 0 0 16px;
+  font-size: 1.5rem;
+}
+
+.dash-switcher {
+  max-width: 1000px;
+  margin-bottom: 16px;
+}
+
+.dash-hero {
+  margin-bottom: 14px;
+  padding: 24px 20px;
+  text-align: center;
+  background: var(--color-accent);
+  color: var(--color-surface);
+  border-radius: 12px;
+}
+
+.dash-hero-count {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: center;
+  gap: 10px;
+  margin: 0;
+}
+
+.dash-hero-number {
+  font-size: 3.5rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.dash-hero-today .dash-hero-number {
+  font-size: 2.5rem;
+}
+
+.dash-hero-label {
+  font-size: 1.1rem;
+}
+
+.dash-hero-meta {
+  margin: 10px 0 0;
+  font-size: 0.95rem;
+  opacity: 0.9;
+}
+
+.dash-card {
+  margin-bottom: 14px;
+  padding: 16px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+}
+
+.dash-heading {
+  margin: 0 0 12px;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.dash-card .panel-state a {
+  color: var(--color-accent);
+  font-weight: 600;
+}
+
+.dash-link {
+  display: inline-block;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-accent);
+  text-decoration: none;
+}
+
+.dash-link:hover {
+  text-decoration: underline;
+}
+
+.dash-hint,
+.dash-more {
+  margin: 0 0 10px;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+.dash-area-progress {
+  background: var(--color-accent);
+  border: 2px solid var(--color-bg);
+  color: var(--color-surface);
+}
+
+.dash-progress {
+  height: 12px;
+  overflow: hidden;
+  background: var(--color-text-muted);
+  border-radius: 999px;
+}
+
+.dash-progress-fill {
+  height: 100%;
+  background: var(--color-surface);
+  border-radius: 999px;
+  transition: width 0.3s ease;
+}
+
+.dash-progress-text {
+  margin: 8px 0 0;
+  font-size: 0.9rem;
+  color: var(--color-surface);
+}
+
+.dash-area-progress .panel-state {
+  color: var(--color-surface);
+}
+
+.dash-area-progress .panel-state a {
+  color: var(--color-surface);
+  text-decoration: underline;
+}
+
+.dash-list {
+  margin: 0 0 10px;
+  padding: 0;
+  list-style: none;
+}
+
+.dash-task {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.dash-task:last-child {
+  border-bottom: 0;
+}
+
+.dash-task-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  cursor: pointer;
+}
+
+.dash-checkbox {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: var(--color-accent);
+  cursor: pointer;
+}
+
+.dash-task-name {
+  overflow-wrap: anywhere;
+}
+
+.dash-task-due {
+  flex-shrink: 0;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+.dash-task-overdue .dash-task-due {
+  font-weight: 600;
+  color: var(--color-danger);
+}
+
+.dash-folders {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 10px;
+  padding: 0;
+  list-style: none;
+}
+
+.dash-folder {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  font-size: 0.9rem;
+  color: var(--color-text);
+  text-decoration: none;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+}
+
+.dash-folder:hover {
+  background: var(--color-bg-hover);
+}
+
+.dash-folder-count {
+  min-width: 22px;
+  padding: 0 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-align: center;
+  background: var(--color-surface);
+  border-radius: 999px;
+}
+
+.dash-folder-empty {
+  color: var(--color-text-muted);
+  border-style: dashed;
+}
+
+.dash-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.dash-actions .btn,
+.dash-empty .btn {
+  display: inline-block;
+  text-align: center;
+  text-decoration: none;
+}
+
+.dash-empty p {
+  margin: 0 0 14px;
+}
+
+/* --- Grid layout: countdown on top, tasks left, progress + folders right --- */
+.dash-grid {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-areas:
+    "hero hero"
+    "attention progress"
+    "attention folders"
+    "actions actions";
+}
+
+/* The grid gap replaces the per-card bottom margins */
+.dash-grid > * {
+  margin-bottom: 0;
+}
+
+.dash-area-hero { grid-area: hero; }
+.dash-area-attention { grid-area: attention; }
+.dash-area-folders { grid-area: folders; }
+.dash-area-actions { grid-area: actions; }
+
+/* Tablet and phone: one column, stacked in a sensible reading order */
+@media (max-width: 640px) {
+  .dash-grid {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "hero"
+      "progress"
+      "attention"
+      "folders"
+      "actions";
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard {
+    padding: 16px;
+  }
+
+  .dash-hero-number {
+    font-size: 3rem;
+  }
+
+  .dash-actions .btn {
+    flex: 1 1 100%;
+  }
+}
+
+
+.mt-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr));
+  gap: 20px;
+}
+
+.mt-card {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  scroll-margin-top: 16px; /* room above a card scrolled into view */
+  padding: 20px;
+  color: var(--color-text);
+  background: var(--color-surface);
+  border: 2px solid var(--color-border);
+  border-radius: 12px;
+}
+
+/* the card the user was sent to from another page */
+.mt-card-selected {
+  border-color: var(--color-accent);
+}
+
+.mt-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.mt-badge {
+  padding: 4px 10px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  border-radius: 999px;
+}
+
+.mt-badge-move {
+  background: var(--color-accent);
+  color: var(--color-surface);
+}
+
+.mt-badge-trip {
+  background: var(--color-accent-trip);
+  color: var(--color-text);
+}
+
+.mt-countdown {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--color-text-muted);
+}
+
+.mt-name {
+  margin: 12px 0 2px;
+  font-size: 1.3rem;
+}
+
+.mt-date {
+  margin: 0 0 14px;
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+}
+
+.mt-progress {
+  height: 10px;
+  overflow: hidden;
+  background: var(--color-bg-hover);
+  border-radius: 999px;
+}
+
+.mt-progress-fill {
+  height: 100%;
+  background: var(--color-accent);
+  border-radius: 999px;
+  transition: width 0.3s ease;
+}
+
+.mt-progress-text {
+  margin: 6px 0 14px;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+.mt-tasks {
+  margin: 0 0 8px;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--color-border);
+}
+
+.mt-task {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--color-bg-hover);
+}
+
+.mt-task-check {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  accent-color: var(--color-accent);
+}
+
+.mt-task-label {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  cursor: pointer;
+}
+
+.mt-task-name {
+  font-size: 0.95rem;
+}
+
+.mt-task-name-done {
+  text-decoration: line-through;
+  color: var(--color-text-muted);
+}
+
+.mt-task-meta {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
+.mt-task-meta-overdue {
+  font-weight: 700;
+  color: var(--color-danger);
+}
+
+.mt-empty-tasks {
+  margin: 0 0 12px;
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+}
+
+.mt-more {
+  align-self: flex-start;
+  margin-bottom: 8px;
+  padding: 4px 0;
+  font: inherit;
+  font-size: 0.9rem;
+  color: var(--color-accent);
+  text-decoration: underline;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.mt-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 12px;
+}
+
+.mt-actions .btn-delete {
+  margin-left: auto;
+}
+
+.mt-actions a.btn {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.tg-task {
+  flex-wrap: wrap;
+}
+
+.tg-task-label {
+  flex: 1 1 160px;
+}
+
+.tg-task-btns {
+  display: flex;
+  gap: 6px;
+}
+
+.tg-task-btns .btn {
+  padding: 4px 10px;
+  font-size: 0.8rem;
+}
+
+.tg-no-parent {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
 }

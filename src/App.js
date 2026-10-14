@@ -5,12 +5,12 @@ import api from './api';
 import Login from './Components/Login'; 
 import Signup from './Components/Signup';
 import Navbar from './Components/navbar';
-import Home from './Components/home';
-import Tasks from './Components/tasks';
+import Dashboard from './Components/Dashboard';
 import Pictures from './Components/pictures';
 import Notifications from './Components/notifications';
 import MoveTripSelector from './Components/move-trip-selector';
 import AllTasks from './Components/AllTasks';
+import { SelectionProvider } from './Components/SelectionContext';
 import './App.css';
 
 function ProtectedRoute({ user, authReady, children }) {
@@ -69,36 +69,40 @@ function App() {
   }, []);
 
   return (
-    <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-      <div className="App">
-        <Navbar user={user} setUser={setUser} />
+    <SelectionProvider>
+      <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+        <div className="App">
+          <Navbar user={user} setUser={setUser} />
 
-        <Routes>
-          <Route
-            path="/login"
-            element={
-              <PublicRoute user={user} authReady={authReady}>
-                <Login onAuthSuccess={setUser} />
-              </PublicRoute>
-            }
-          />
-          <Route
-            path="/signup"
-            element={
-              <PublicRoute user={user} authReady={authReady}>
-                <Signup />
-              </PublicRoute>
-            }
-          />
-          <Route path="/" element={<ProtectedRoute user={user} authReady={authReady}><Home /></ProtectedRoute>} />
-          <Route path="/tasks" element={<ProtectedRoute user={user} authReady={authReady}><Tasks /></ProtectedRoute>} />
-          <Route path="/pictures" element={<ProtectedRoute user={user} authReady={authReady}><Pictures /></ProtectedRoute>} />
-          <Route path="/notifications" element={<ProtectedRoute user={user} authReady={authReady}><Notifications /></ProtectedRoute>} />
-          <Route path="/move-trip-selector" element={<ProtectedRoute user={user} authReady={authReady}><MoveTripSelector /></ProtectedRoute>} />
-          <Route path="/all-tasks" element={<ProtectedRoute user={user} authReady={authReady}><AllTasks /></ProtectedRoute>} />
-        </Routes>
-      </div>
-    </Router>
+          <Routes>
+            <Route
+              path="/login"
+              element={
+                <PublicRoute user={user} authReady={authReady}>
+                  <Login onAuthSuccess={setUser} />
+                </PublicRoute>
+              }
+            />
+            <Route
+              path="/signup"
+              element={
+                <PublicRoute user={user} authReady={authReady}>
+                  <Signup />
+                </PublicRoute>
+              }
+            />
+            <Route path="/" element={<ProtectedRoute user={user} authReady={authReady}><Dashboard /></ProtectedRoute>} />
+            <Route path="/tasks" element={<Navigate to="/all-tasks" replace />} />
+            <Route path="/pictures" element={<ProtectedRoute user={user} authReady={authReady}><Pictures /></ProtectedRoute>} />
+            <Route path="/notifications" element={<ProtectedRoute user={user} authReady={authReady}><Notifications /></ProtectedRoute>} />
+            <Route path="/move-trip-selector" element={<ProtectedRoute user={user} authReady={authReady}><MoveTripSelector /></ProtectedRoute>} />
+            <Route path="/all-tasks" element={<ProtectedRoute user={user} authReady={authReady}><AllTasks /></ProtectedRoute>} />
+            <Route path="/dashboard" element={<ProtectedRoute user={user} authReady={authReady}><Dashboard /></ProtectedRoute>} />
+            <Route path="*" element={<Navigate to="/dashboard" replace />} />
+          </Routes>
+        </div>
+      </Router>
+    </SelectionProvider>
   );
 }
 

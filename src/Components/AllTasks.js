@@ -1,6 +1,48 @@
-import {  useState, useEffect } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
+import TaskGroupCard from "./TaskGroupCard";
+import { daysUntil } from "./MovesTripsHelpers";
 
 const API_BASE = "/api";
+
+const sameId = (a, b) => String(a) === String(b);
+
+function buildGroups(moves, trips, tasks) {
+    const groups = [
+        ...moves.map((m) => ({
+            key: `move-${m.id}`,
+            type: "move",
+            id: m.id,
+            name: m.name,
+            date: m.target_date?.slice(0, 10) || "",
+            tasks: tasks.filter((t) => sameId(t.move_id, m.id)),
+        })),
+        ...trips.map((t) => ({
+            key: `trip-${t.id}`,
+            type: "trip",
+            id: t.id,
+            name: t.name,
+            date: t.trip_date?.slice(0, 10) || "",
+            tasks: tasks.filter((task) => sameId(task.trip_id, t.id)),
+        })),
+    ];
+
+    const upcoming = groups
+        .filter((g) => g.date && daysUntil(g.date) >= 0)
+        .sort((a, b) => a.date.localeCompare(b.date));
+    const past = groups
+        .filter((g) => g.date && daysUntil(g.date) < 0)
+        .sort((a, b) => b.date.localeCompare(a.date));
+    const undated = groups.filter((g) => !g.date);
+
+    const result = [...upcoming, ...past, ...undated];
+
+    const orphans = tasks.filter((t) => !t.move_id && !t.trip_id);
+    if (orphans.length > 0) {
+        result.push({ key: "none", type: "none", id: null, name: "Other tasks", date: "", tasks: orphans });
+    }
+    return result;
+}
 
 function AllTasks() {
     const [tasks, setTasks] = useState([]);
@@ -14,8 +56,15 @@ function AllTasks() {
     const [parentChoice, setParentChoice] = useState("");
     const [editingTask, setEditingTask] = useState(null);
 
-    const loadAll = async () => {
-        setLoading(true);
+    const [searchParams] = useSearchParams();
+    const focusKey = searchParams.get("move")
+        ? `move-${searchParams.get("move")}`
+        : searchParams.get("trip")
+        ? `trip-${searchParams.get("trip")}`
+        : null;
+
+    const loadAll = async (isFirstLoad = false) => {
+        if (isFirstLoad) setLoading(true);
         setError("");
 
         try {
@@ -41,8 +90,15 @@ function AllTasks() {
     };
 
     useEffect(() => {
-        loadAll();
+        loadAll(true);
     }, []);
+
+    useEffect(() => {
+        if (loading || !focusKey) return;
+        document
+            .getElementById(`group-${focusKey}`)
+            ?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, [loading, focusKey]);
 
     const resetForm = () => {
         setTaskName("");
@@ -102,6 +158,7 @@ function AllTasks() {
                 ? `trip:${task.trip_id}`
                 : "",
         );
+        window.scrollTo({ top: 0, behavior: "smooth" }); // the form is at the top of the page
     };
 
     const toggleTaskCompletion = async (task) => {
@@ -112,8 +169,11 @@ function AllTasks() {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     task_name: task.task_name,
-                    due_date: task.due_date,
+                    due_date: task.due_date ? task.due_date.slice(0, 10) : null,
                     completion_status: !task.completion_status,
+                    // sent so the update can never clear the task's move or trip
+                    move_id: task.move_id ?? null,
+                    trip_id: task.trip_id ?? null,
                 }),
             });
 
@@ -146,8 +206,17 @@ function AllTasks() {
         }
     };
 
+    const addTaskTo = (group) => {
+        resetForm();
+        setParentChoice(`${group.type}:${group.id}`);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        document.getElementById("task-name")?.focus();
+    };
+
+    const groups = buildGroups(moves, trips, tasks);
+
     return (
-       <div className="task-list">
+       <div className="task-list all-tasks-page">
     <h2 className="task-list-title">All Tasks</h2>
     {error && <p className="task-list-error">{error}</p>}
     <form className="task-form" onSubmit={saveTask}>
@@ -202,35 +271,22 @@ function AllTasks() {
     <hr className="task-divider" />
     {loading ? (
         <p className="task-list-state">Loading...</p>
-    ) : tasks.length === 0 ? (
-        <p className="task-list-state">No tasks yet.</p>
+    ) : groups.length === 0 ? (
+        <p className="task-list-state">No moves or trips yet. Add one on the Moves & Trips page.</p>
     ) : (
-        <ul className="task-items">
-            {tasks.map((task) => (
-                <li key={task.id} className="task-item">
-                    <input
-                        type="checkbox"
-                        className="task-checkbox"
-                        checked={task.completion_status}
-                        onChange={() => toggleTaskCompletion(task)}
-                    />
-                    <span className={`task-name${task.completion_status ? " is-complete" : ""}`}>
-                        {task.task_name}
-                    </span>
-
-                    <p className="task-meta">
-                        Belongs to:
-                        {task.move_id ? ` Move: ${moves.find(m => m.id === task.move_id)?.name}` : ""}
-                        {task.trip_id ? ` Trip: ${trips.find(t => t.id === task.trip_id)?.name}` : ""}
-                    </p>
-                    <p className="task-due">Due Date: {task.due_date ? task.due_date.slice(0, 10) : "-"}</p>
-                    <button type="button" className="btn btn-edit" onClick={() => editTask(task)}>
-                        Edit
-                    </button>
-                    <button className="btn btn-delete" onClick={() => deleteTask(task.id)}>Delete</button>
-                </li>
+        <div className="mt-grid">
+            {groups.map((group) => (
+                <TaskGroupCard
+                    key={group.key}
+                    group={group}
+                    highlighted={group.key === focusKey}
+                    onToggleTask={toggleTaskCompletion}
+                    onEditTask={editTask}
+                    onDeleteTask={deleteTask}
+                    onAddTask={addTaskTo}
+                />
             ))}
-        </ul>
+        </div>
     )}
 </div>
     );

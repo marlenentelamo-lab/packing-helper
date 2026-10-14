@@ -132,6 +132,8 @@ function Task({ moveId, tripId }) {
             task_name: task.task_name,
             due_date: task.due_date,
             completion_status: !task.completion_status,
+            move_id: task.move_id ?? moveId ?? null,
+            trip_id: task.trip_id ?? tripId ?? null,
           }),
         });
 
@@ -166,6 +168,8 @@ function Task({ moveId, tripId }) {
             due_date: dueDate,
             completion_status:
               tasks.find((t) => t.id === editingId)?.completion_status ?? false,
+            move_id: moveId ?? null,
+            trip_id: tripId ?? null,
           }),
         });
 
