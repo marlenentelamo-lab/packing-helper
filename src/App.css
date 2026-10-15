@@ -33,7 +33,7 @@ body {
 }
 
 .navbar {
-  background-color: var(--color-bg);
+  background-color: var(--color-surface);
   overflow: hidden;
   display: flex;
   justify-content: space-between;
@@ -65,6 +65,11 @@ body {
 .navbar-links a:hover {
   text-decoration: underline;
   color: var(--color-link-hover);
+}
+
+.navbar-links a.active,
+.navbar-links a[aria-current="page"] {
+  text-decoration: underline;
 }
 
 .form-field {
@@ -1398,4 +1403,94 @@ body {
 .tg-no-parent {
   font-size: 0.85rem;
   color: var(--color-text-muted);
+}
+
+/* ==========================================================
+   N+2. Pictures cards  (add after the All Tasks cards section)
+   One card per move or trip on the Pictures page: the name, then
+   each folder with its count and a row of thumbnails.
+   Builds on the Moves & Trips card classes, so that section must
+   already be in App.css:
+     .mt-grid, .mt-card, .mt-card-head, .mt-badge, .mt-countdown,
+     .mt-name, .mt-date, .mt-more, .mt-actions, .mt-empty-tasks
+   New: .pc-* classes for the summary line, folder rows, thumbnails
+        and the header shown once a move or trip is open
+   ========================================================== */
+
+.pc-summary {
+  margin: 0 0 12px;
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+.pc-folders {
+  margin: 0 0 8px;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--color-border);
+}
+
+.pc-folder {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--color-bg-hover);
+}
+
+.pc-folder-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 0.95rem;
+}
+
+.pc-folder-count {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+/* an empty folder gets a dashed line and muted name, like on the dashboard */
+.pc-folder-empty {
+  border-bottom: 1px dashed var(--color-border);
+}
+
+.pc-folder-empty .pc-folder-name {
+  color: var(--color-text-muted);
+}
+
+.pc-thumbs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.pc-thumb {
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+  background: var(--color-bg-hover);
+  border-radius: 8px;
+}
+
+/* the last tile when a folder has more pictures than fit */
+.pc-thumb-more {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.pc-selected-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.pc-selected-title {
+  margin: 0;
+  font-size: 1.4rem;
 }

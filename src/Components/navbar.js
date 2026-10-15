@@ -1,8 +1,9 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import api from "../api";
 
 function Navbar({ user, setUser }) {
   const navigate = useNavigate();
+  const { pathname } = useLocation();
 
   const handleLogout = async () => {
     try {
@@ -20,11 +21,16 @@ function Navbar({ user, setUser }) {
       <Link to="/dashboard" className="navbar-brand">Packing Helper</Link>
   
       <div className="navbar-links">
-        <Link to="/dashboard">Dashboard</Link>
-        <Link to="/all-tasks">All Tasks</Link>
-        <Link to="/pictures">Pictures</Link>
-        <Link to="/notifications">Notifications</Link>
-        <Link to="/move-trip-selector">Moves &amp; Trips</Link>
+        <NavLink
+          to="/dashboard"
+          className={({ isActive }) => (isActive || pathname === "/" ? "active" : undefined)}
+        >
+          Dashboard
+        </NavLink>
+        <NavLink to="/all-tasks">All Tasks</NavLink>
+        <NavLink to="/pictures">Pictures</NavLink>
+        <NavLink to="/notifications">Notifications</NavLink>
+        <NavLink to="/move-trip-selector">Moves &amp; Trips</NavLink>
 
         {user ? (
           <>
@@ -32,7 +38,7 @@ function Navbar({ user, setUser }) {
             <button type="button" className="btn btn-secondary" onClick={handleLogout}>Logout</button>
           </>
         ) : (
-          <Link to="/login">Login</Link>
+          <NavLink to="/login">Login</NavLink>
         )}
       </div>
     </nav>  

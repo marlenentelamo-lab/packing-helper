@@ -1,38 +1,100 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { api } from '../api';
 import FolderList from './FolderList';
 import FolderView from './FolderView';
+import PictureCard from './PictureCard';
+import { daysUntil, FOLDER_PREVIEW } from './MovesTripsHelpers';
+
+const DATE_FIELD = { move: 'target_date', trip: 'trip_date' };
+
+function sortCards(cards) {
+  const date = (c) => c.item.date;
+  return [
+    ...cards
+      .filter((c) => date(c) && daysUntil(date(c)) >= 0)
+      .sort((a, b) => date(a).localeCompare(date(b))),
+    ...cards
+      .filter((c) => date(c) && daysUntil(date(c)) < 0)
+      .sort((a, b) => date(b).localeCompare(date(a))),
+    ...cards.filter((c) => !date(c)),
+  ];
+}
 
 export default function PicturesPage() {
-  const [moves, setMoves] = useState([]);
-  const [trips, setTrips] = useState([]);
+  const [cards, setCards] = useState([]);
   const [selected, setSelected] = useState(null);
   const [openFolder, setOpenFolder] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  useEffect(() => {
-    Promise.all([api.get('/moves'), api.get('/trips')])
-      .then(([m, t]) => {
-        setMoves(m);
-        setTrips(t);
-      })
-      .catch((err) => setError(err.message))
-      .finally(() => setLoading(false));
+  const load = useCallback(async () => {
+    try {
+      setError('');
+      const [moves, trips] = await Promise.all([api.get('/moves'), api.get('/trips')]);
+      const rows = [
+        ...moves.map((row) => ({ type: 'move', row })),
+        ...trips.map((row) => ({ type: 'trip', row })),
+      ];
+
+      const loaded = await Promise.all(
+        rows.map(async ({ type, row }) => {
+          const folders = await api.get(`/picture-folders?${type}_id=${row.id}`);
+
+          const picturesByFolder = {};
+          await Promise.all(
+            folders
+              .slice(0, FOLDER_PREVIEW)
+              .filter((f) => Number(f.picture_count || 0) > 0)
+              .map(async (f) => {
+                try {
+                  picturesByFolder[f.id] = await api.get(
+                    `/pictures?folder_id=${encodeURIComponent(f.id)}`
+                  );
+                } catch (err) {
+                  console.error(err);
+                }
+              })
+          );
+
+          return {
+            item: {
+              type,
+              id: String(row.id), // keep id as a string so UUIDs work too
+              name: row.name,
+              date: String(row[DATE_FIELD[type]] || '').slice(0, 10),
+            },
+            folders,
+            picturesByFolder,
+          };
+        })
+      );
+      setCards(sortCards(loaded));
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
-  const handleSelect = (e) => {
-    setOpenFolder(null); // changing move/trip always returns to the folder list
-    if (!e.target.value) {
-      setSelected(null);
-      return;
-    }
-    const [type, id] = e.target.value.split(':');
-    setSelected({ type, id }); // keep id as a string so UUIDs work too
+  useEffect(() => {
+    load();
+  }, [load]);
+
+  const handleOpen = (item) => {
+    setOpenFolder(null);
+    setSelected({ type: item.type, id: item.id });
   };
 
-  const selectValue = selected ? `${selected.type}:${selected.id}` : '';
-  const nothingExists = !loading && !error && moves.length === 0 && trips.length === 0;
+  const backToCards = () => {
+    setOpenFolder(null);
+    setSelected(null);
+    load();
+  };
+
+  const nothingExists = !loading && !error && cards.length === 0;
+  const selectedCard = selected
+    ? cards.find((c) => c.item.type === selected.type && c.item.id === selected.id)
+    : null;
 
   return (
     <div className="pictures-page">
@@ -46,46 +108,35 @@ export default function PicturesPage() {
 
       {!loading && !nothingExists && !error && (
         <>
-          <div className="form-field">
-            <label htmlFor="pictures-source">Pictures for</label>
-            <select
-              id="pictures-source"
-              className="field-select"
-              value={selectValue}
-              onChange={handleSelect}
-            >
-              <option value="">Choose a move or trip</option>
-              {moves.length > 0 && (
-                <optgroup label="Moves">
-                  {moves.map((m) => (
-                    <option key={`move:${m.id}`} value={`move:${m.id}`}>
-                      {m.name}
-                    </option>
-                  ))}
-                </optgroup>
-              )}
-              {trips.length > 0 && (
-                <optgroup label="Trips">
-                  {trips.map((t) => (
-                    <option key={`trip:${t.id}`} value={`trip:${t.id}`}>
-                      {t.name}
-                    </option>
-                  ))}
-                </optgroup>
-              )}
-            </select>
-          </div>
-
           {!selected && (
-            <p className="panel-state">Choose a move or trip to see its folders.</p>
+            <div className="mt-grid">
+              {cards.map((card) => (
+                <PictureCard
+                  key={`${card.item.type}-${card.item.id}`}
+                  item={card.item}
+                  folders={card.folders}
+                  picturesByFolder={card.picturesByFolder}
+                  onOpen={handleOpen}
+                />
+              ))}
+            </div>
           )}
 
-          {selected && !openFolder && (
-            <FolderList selected={selected} onOpen={setOpenFolder} />
-          )}
+          {selected && (
+            <>
+              <div className="pc-selected-head">
+                <button type="button" className="btn btn-secondary" onClick={backToCards}>
+                  ← All moves &amp; trips
+                </button>
+                {selectedCard && <h2 className="pc-selected-title">{selectedCard.item.name}</h2>}
+              </div>
 
-          {selected && openFolder && (
-            <FolderView folder={openFolder} onBack={() => setOpenFolder(null)} />
+              {!openFolder && <FolderList selected={selected} onOpen={setOpenFolder} />}
+
+              {openFolder && (
+                <FolderView folder={openFolder} onBack={() => setOpenFolder(null)} />
+              )}
+            </>
           )}
         </>
       )}

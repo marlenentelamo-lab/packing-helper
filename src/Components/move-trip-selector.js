@@ -3,13 +3,12 @@ import { api } from "../api";
 import MoveTripCard from "./MoveTripCard";
 import { daysUntil } from "./MovesTripsHelpers";
 
-// The address of your All Tasks page. Change this if your route is different.
 const ALL_TASKS_PATH = "/alltasks";
 
 function MoveTripSelector() {
-  const [type, setType] = useState("move"); // "move" or "trip"
+  const [type, setType] = useState("move");
   const [items, setItems] = useState([]);
-  const [tasksByItem, setTasksByItem] = useState({}); // { [itemId]: [tasks] } for the card previews
+  const [tasksByItem, setTasksByItem] = useState({}); 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -22,7 +21,7 @@ function MoveTripSelector() {
   const getDate = (item) => item[dateField]?.slice(0, 10) || "";
 
   useEffect(() => {
-    let cancelled = false; // ignore a slow response if the user switched type meanwhile
+    let cancelled = false; 
 
     async function fetchItems() {
       setLoading(true);
@@ -34,7 +33,6 @@ function MoveTripSelector() {
       try {
         const data = await api.get(`/${endpoint}`);
 
-        // One tasks request per move or trip, all at the same time.
         const entries = await Promise.all(
           data.map(async (item) => {
             try {
@@ -63,7 +61,6 @@ function MoveTripSelector() {
     };
   }, [type, endpoint]);
 
-  // Upcoming first (soonest at the top), then past ones (most recent first).
   const sortedItems = [
     ...items
       .filter((i) => daysUntil(getDate(i)) >= 0)
@@ -107,7 +104,7 @@ function MoveTripSelector() {
     setEditingId(item.id);
     setNewName(item.name);
     setNewDate(getDate(item));
-    window.scrollTo({ top: 0, behavior: "smooth" }); // the form is at the top of the page
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const cancelEdit = () => {
@@ -129,7 +126,6 @@ function MoveTripSelector() {
     }
   };
 
-  // Tick or untick a task right on the card.
   const toggleTask = async (item, task) => {
     const next = !task.completion_status;
     const setStatus = (status) =>
@@ -140,19 +136,19 @@ function MoveTripSelector() {
         ),
       }));
 
-    setStatus(next); // show the change right away
+    setStatus(next); 
     try {
       await api.put(`/tasks/${task.id}`, {
         task_name: task.task_name,
         due_date: task.due_date ? String(task.due_date).slice(0, 10) : null,
         completion_status: next,
-        // sent so the update can never clear the task's move or trip
+
         move_id: task.move_id ?? null,
         trip_id: task.trip_id ?? null,
       });
     } catch (err) {
       console.error(err);
-      setStatus(!next); // undo if it failed
+      setStatus(!next); 
       setError("Could not update the task. Please try again.");
     }
   };

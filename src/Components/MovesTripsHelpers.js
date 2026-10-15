@@ -53,3 +53,5 @@ export function previewTasks(tasks, limit = PREVIEW_LIMIT) {
 }
 
 export const GROUP_LIMIT = 10;
+
+export const FOLDER_PREVIEW = 4;
