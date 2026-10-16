@@ -3,7 +3,7 @@ import { api } from "../api";
 import MoveTripCard from "./MoveTripCard";
 import { daysUntil } from "./MovesTripsHelpers";
 
-const ALL_TASKS_PATH = "/alltasks";
+const ALL_TASKS_PATH = "/all-tasks";
 
 function MoveTripSelector() {
   const [type, setType] = useState("move");
@@ -11,6 +11,7 @@ function MoveTripSelector() {
   const [tasksByItem, setTasksByItem] = useState({}); 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [updatingCompletionId, setUpdatingCompletionId] = useState(null);
 
   const [newName, setNewName] = useState("");
   const [newDate, setNewDate] = useState("");
@@ -153,6 +154,40 @@ function MoveTripSelector() {
     }
   };
 
+  const toggleCompletion = async (item, completion_status) => {
+    if (updatingCompletionId !== null) return;
+
+    const previousStatus = !!item.completion_status;
+    setUpdatingCompletionId(item.id);
+    setError("");
+    setItems((current) =>
+      current.map((entry) =>
+        entry.id === item.id ? { ...entry, completion_status } : entry
+      )
+    );
+
+    try {
+      const savedItem = await api.put(`/${endpoint}/${item.id}`, {
+        completion_status,
+      });
+      setItems((current) =>
+        current.map((entry) => (entry.id === item.id ? savedItem : entry))
+      );
+    } catch (err) {
+      console.error(err);
+      setItems((current) =>
+        current.map((entry) =>
+          entry.id === item.id
+            ? { ...entry, completion_status: previousStatus }
+            : entry
+        )
+      );
+      setError(`Could not update ${type} completion. Please try again.`);
+    } finally {
+      setUpdatingCompletionId(null);
+    }
+  };
+
   return (
     <div className="move-trip-panel">
       <h1 className="panel-title">Moves & Trips</h1>
@@ -234,6 +269,8 @@ function MoveTripSelector() {
               tasks={tasksByItem[item.id] || []}
               tasksLink={`${ALL_TASKS_PATH}?${type}=${item.id}`}
               onToggleTask={toggleTask}
+              onToggleCompletion={toggleCompletion}
+              completionUpdating={updatingCompletionId !== null}
               onEdit={editItem}
               onDelete={deleteItem}
             />

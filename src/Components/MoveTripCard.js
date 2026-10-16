@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import {
   countdownText,
   daysUntil,
@@ -12,11 +13,12 @@ function MoveTripCard({
   type,
   date,
   tasks,
-  managing,
   onToggleTask,
-  onManage,
+  onToggleCompletion,
+  completionUpdating,
   onEdit,
   onDelete,
+  tasksLink,
 }) {
   const total = tasks.length;
   const done = tasks.filter((t) => t.completion_status).length;
@@ -25,7 +27,7 @@ function MoveTripCard({
   const hidden = total - preview.length;
 
   return (
-    <section className={managing ? "mt-card mt-card-selected" : "mt-card"}>
+    <section className="mt-card">
       <div className="mt-card-head">
         <span className={`mt-badge mt-badge-${type}`}>
           {type === "move" ? "Move" : "Trip"}
@@ -33,8 +35,23 @@ function MoveTripCard({
         <span className="mt-countdown">{countdownText(daysUntil(date), type)}</span>
       </div>
 
-      <h2 className="mt-name">{item.name}</h2>
+      <h2 className={item.completion_status ? "mt-name mt-name-complete" : "mt-name"}>
+        {item.name}
+      </h2>
       <p className="mt-date">{formatLong(date)}</p>
+
+      <div className="mt-completion-label">
+        <input
+          type="checkbox"
+          className="mt-completion-check"
+          checked={!!item.completion_status}
+          disabled={completionUpdating}
+          onChange={(event) => onToggleCompletion(item, event.target.checked)}
+          aria-label={`Mark ${item.name} as ${
+            item.completion_status ? "not completed" : "completed"
+          }`}
+        />
+      </div>
 
       <div className="mt-progress">
         <div className="mt-progress-fill" style={{ width: `${percent}%` }} />
@@ -81,16 +98,16 @@ function MoveTripCard({
         </ul>
       )}
 
-      {hidden > 0 && !managing && (
-        <button type="button" className="mt-more" onClick={() => onManage(item)}>
+      {hidden > 0 && (
+        <Link to={tasksLink} className="mt-more">
           See {hidden} more {hidden === 1 ? "task" : "tasks"}
-        </button>
+        </Link>
       )}
 
       <div className="mt-actions">
-        <button type="button" className="btn btn-primary" onClick={() => onManage(item)}>
-          {managing ? "Hide tasks" : "Manage tasks"}
-        </button>
+        <Link to={tasksLink} className="btn btn-primary">
+          Manage tasks
+        </Link>
         <button
           type="button"
           className="btn btn-edit"

@@ -15,6 +15,7 @@ function buildGroups(moves, trips, tasks) {
             id: m.id,
             name: m.name,
             date: m.target_date?.slice(0, 10) || "",
+            completion_status: m.completion_status,
             tasks: tasks.filter((t) => sameId(t.move_id, m.id)),
         })),
         ...trips.map((t) => ({
@@ -23,6 +24,7 @@ function buildGroups(moves, trips, tasks) {
             id: t.id,
             name: t.name,
             date: t.trip_date?.slice(0, 10) || "",
+            completion_status: t.completion_status,
             tasks: tasks.filter((task) => sameId(task.trip_id, t.id)),
         })),
     ];
@@ -50,6 +52,7 @@ function AllTasks() {
     const [trips, setTrips] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
+    const [completionUpdating, setCompletionUpdating] = useState(false);
 
     const [taskName, setTaskName] = useState("");
     const [dueDate, setDueDate] = useState("");
@@ -188,6 +191,41 @@ function AllTasks() {
         }
     };
 
+    const toggleGroupCompletion = async (group, completion_status) => {
+        if (completionUpdating) return;
+        setCompletionUpdating(true);
+        setError("");
+
+        const isMove = group.type === "move";
+        try {
+            const res = await fetch(`${API_BASE}/${isMove ? "moves" : "trips"}/${group.id}`, {
+                method: "PUT",
+                credentials: "include",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    completion_status,
+                }),
+            });
+            if (!res.ok) throw new Error("Failed to update completion status.");
+
+            const updatedGroup = await res.json();
+            if (isMove) {
+                setMoves((current) => current.map((move) =>
+                    move.id === group.id ? updatedGroup : move
+                ));
+            } else {
+                setTrips((current) => current.map((trip) =>
+                    trip.id === group.id ? updatedGroup : trip
+                ));
+            }
+        } catch (err) {
+            console.error(err);
+            setError(`Could not update ${group.type} completion. Please try again.`);
+        } finally {
+            setCompletionUpdating(false);
+        }
+    };
+
     const deleteTask = async (taskId) => {
         try {
             const res = await fetch(`${API_BASE}/tasks/${taskId}`, {
@@ -281,6 +319,8 @@ function AllTasks() {
                     group={group}
                     highlighted={group.key === focusKey}
                     onToggleTask={toggleTaskCompletion}
+                    onToggleCompletion={toggleGroupCompletion}
+                    completionUpdating={completionUpdating}
                     onEditTask={editTask}
                     onDeleteTask={deleteTask}
                     onAddTask={addTaskTo}

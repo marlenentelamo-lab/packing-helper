@@ -9,7 +9,16 @@ import {
   previewTasks,
 } from "./MovesTripsHelpers";
 
-function TaskGroupCard({ group, highlighted, onToggleTask, onEditTask, onDeleteTask, onAddTask }) {
+function TaskGroupCard({
+  group,
+  highlighted,
+  onToggleTask,
+  onToggleCompletion,
+  onEditTask,
+  onDeleteTask,
+  onAddTask,
+  completionUpdating,
+}) {
   const [expanded, setExpanded] = useState(false);
 
   const { tasks, type } = group;
@@ -37,8 +46,25 @@ function TaskGroupCard({ group, highlighted, onToggleTask, onEditTask, onDeleteT
         )}
       </div>
 
-      <h2 className="mt-name">{group.name}</h2>
+      <h2 className={group.completion_status ? "mt-name mt-name-complete" : "mt-name"}>
+        {group.name}
+      </h2>
       {group.date && <p className="mt-date">{formatLong(group.date)}</p>}
+
+      {type !== "none" && (
+        <div className="mt-completion-label">
+          <input
+            type="checkbox"
+            className="mt-completion-check"
+            checked={!!group.completion_status}
+            disabled={completionUpdating}
+            onChange={(event) => onToggleCompletion(group, event.target.checked)}
+            aria-label={`Mark ${group.name} as ${
+              group.completion_status ? "not completed" : "completed"
+            }`}
+          />
+        </div>
+      )}
 
       <div className="mt-progress">
         <div className="mt-progress-fill" style={{ width: `${percent}%` }} />
