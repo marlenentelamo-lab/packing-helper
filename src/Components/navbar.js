@@ -1,5 +1,6 @@
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import api from "../api";
+import NotificationBell from "./notifications";
 
 function Navbar({ user, setUser }) {
   const navigate = useNavigate();
@@ -29,7 +30,11 @@ function Navbar({ user, setUser }) {
         </NavLink>
         <NavLink to="/all-tasks">All Tasks</NavLink>
         <NavLink to="/pictures">Pictures</NavLink>
-        <NavLink to="/notifications">Notifications</NavLink>
+        <NotificationBell
+          className="navbar-notifications"
+          open={pathname === "/notifications"}
+          onOpen={() => navigate("/notifications")}
+        />
         <NavLink to="/move-trip-selector">Moves &amp; Trips</NavLink>
 
         {user ? (

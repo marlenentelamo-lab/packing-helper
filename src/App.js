@@ -7,7 +7,7 @@ import Signup from './Components/Signup';
 import Navbar from './Components/navbar';
 import Dashboard from './Components/Dashboard';
 import Pictures from './Components/pictures';
-import Notifications from './Components/notifications';
+import { NotificationsPage } from './Components/notifications';
 import MoveTripSelector from './Components/move-trip-selector';
 import AllTasks from './Components/AllTasks';
 import { SelectionProvider } from './Components/SelectionContext';
@@ -94,7 +94,7 @@ function App() {
             <Route path="/" element={<ProtectedRoute user={user} authReady={authReady}><Dashboard /></ProtectedRoute>} />
             <Route path="/tasks" element={<Navigate to="/all-tasks" replace />} />
             <Route path="/pictures" element={<ProtectedRoute user={user} authReady={authReady}><Pictures /></ProtectedRoute>} />
-            <Route path="/notifications" element={<ProtectedRoute user={user} authReady={authReady}><Notifications /></ProtectedRoute>} />
+            <Route path="/notifications" element={<ProtectedRoute user={user} authReady={authReady}><NotificationsPage /></ProtectedRoute>} />
             <Route path="/move-trip-selector" element={<ProtectedRoute user={user} authReady={authReady}><MoveTripSelector /></ProtectedRoute>} />
             <Route path="/all-tasks" element={<ProtectedRoute user={user} authReady={authReady}><AllTasks /></ProtectedRoute>} />
             <Route path="/dashboard" element={<ProtectedRoute user={user} authReady={authReady}><Dashboard /></ProtectedRoute>} />

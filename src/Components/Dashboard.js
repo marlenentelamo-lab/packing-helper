@@ -6,7 +6,6 @@ import { useSelection } from "./SelectionContext";
 const ROUTES = {
   tasks: "/all-tasks",
   pictures: "/pictures",
-  notifications: "/notifications",
   moveTripSelector: "/move-trip-selector",
 };
 const SOON_DAYS = 7;
