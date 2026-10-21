@@ -1,7 +1,3 @@
-/* ============================
-   1. Tokens
-   ============================ */
-
 :root {
   --color-bg: #ADD8E6;
   --color-bg-hover: #C3E6F0;
@@ -13,6 +9,8 @@
   --color-danger: #C0392B;
   --color-danger-text: #FFFFFF;
   --color-link-hover: #0059CF;
+  --color-accent-trip: #0000B8;
+  --color-accent-move: #4B0082;
 }
 
 html,
@@ -42,11 +40,20 @@ body {
 }
 
 .navbar-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   font-size: 1.5rem;
   font-weight: bold;
   color: var(--color-text);
   text-decoration: none;
   margin-top: 0.5rem;
+}
+
+.navbar-logo {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
 }
 
 .navbar-links {
@@ -316,6 +323,10 @@ body {
   border-color: var(--color-accent);
   color: #ffffff;
   cursor: default;
+}
+
+.view-switch {
+  margin-top: 8px;
 }
 
 .panel-error {
@@ -628,7 +639,7 @@ body {
 }
 
 .pictures-page {
-  max-width: 640px;
+  max-width: 1000px;
   margin: 0 auto;
   padding: 24px;
   background: var(--color-bg);
@@ -856,6 +867,13 @@ body {
 .all-tasks-page {
   max-width: 1000px;
   padding: 24px;
+}
+
+.all-tasks-page .task-form {
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-items: stretch;
+  margin-bottom: 0;
 }
 
 .task-item {
@@ -1175,7 +1193,6 @@ body {
   margin: 0 0 14px;
 }
 
-/* --- Grid layout: countdown on top, tasks left, progress + folders right --- */
 .dash-grid {
   display: grid;
   gap: 14px;
@@ -1187,7 +1204,6 @@ body {
     "actions actions";
 }
 
-/* The grid gap replaces the per-card bottom margins */
 .dash-grid > * {
   margin-bottom: 0;
 }
@@ -1197,7 +1213,6 @@ body {
 .dash-area-folders { grid-area: folders; }
 .dash-area-actions { grid-area: actions; }
 
-/* Tablet and phone: one column, stacked in a sensible reading order */
 @media (max-width: 640px) {
   .dash-grid {
     grid-template-columns: minmax(0, 1fr);
@@ -1224,7 +1239,6 @@ body {
   }
 }
 
-
 .mt-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr));
@@ -1235,7 +1249,7 @@ body {
   display: flex;
   flex-direction: column;
   text-align: left;
-  scroll-margin-top: 16px; /* room above a card scrolled into view */
+  scroll-margin-top: 16px;
   padding: 20px;
   color: var(--color-text);
   background: var(--color-surface);
@@ -1243,7 +1257,6 @@ body {
   border-radius: 12px;
 }
 
-/* the card the user was sent to from another page */
 .mt-card-selected {
   border-color: var(--color-accent);
 }
@@ -1265,6 +1278,20 @@ body {
 .mt-badge-trip {
   background: var(--color-accent);
   color: var(--color-surface);
+}
+
+.mt-badge-move {
+  padding: 6px 10px;
+  font-size: 15px;
+  border-radius: 6px;
+  background: var(--color-accent-move);
+}
+
+.mt-badge-trip {
+  padding: 6px 10px;
+  font-size: 15px;
+  border-radius: 6px;
+  background: var(--color-accent-trip);
 }
 
 .mt-countdown {
@@ -1293,16 +1320,19 @@ body {
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-bottom: 14px;
-  color: var(--color-text-muted);
+  margin-bottom: 12px;
   font-size: 0.9rem;
-  cursor: pointer;
 }
 
 .mt-completion-check {
-  width: 16px;
-  height: 16px;
+  flex: none;
+  width: 18px;
+  height: 18px;
   accent-color: var(--color-accent);
+}
+
+.mt-completion-text {
+  cursor: pointer;
 }
 
 .mt-progress {
@@ -1433,18 +1463,6 @@ body {
   color: var(--color-text-muted);
 }
 
-/* ==========================================================
-   N+2. Pictures cards  (add after the All Tasks cards section)
-   One card per move or trip on the Pictures page: the name, then
-   each folder with its count and a row of thumbnails.
-   Builds on the Moves & Trips card classes, so that section must
-   already be in App.css:
-     .mt-grid, .mt-card, .mt-card-head, .mt-badge, .mt-countdown,
-     .mt-name, .mt-date, .mt-more, .mt-actions, .mt-empty-tasks
-   New: .pc-* classes for the summary line, folder rows, thumbnails
-        and the header shown once a move or trip is open
-   ========================================================== */
-
 .pc-summary {
   margin: 0 0 12px;
   font-size: 0.85rem;
@@ -1477,7 +1495,6 @@ body {
   white-space: nowrap;
 }
 
-/* an empty folder gets a dashed line and muted name, like on the dashboard */
 .pc-folder-empty {
   border-bottom: 1px dashed var(--color-border);
 }
@@ -1501,7 +1518,6 @@ body {
   border-radius: 8px;
 }
 
-/* the last tile when a folder has more pictures than fit */
 .pc-thumb-more {
   display: flex;
   align-items: center;
@@ -1515,6 +1531,14 @@ body {
   flex-wrap: wrap;
   align-items: center;
   gap: 12px;
+}
+
+.back-to-top {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 1000;
+  box-shadow: 0 2px 8px rgb(0 33 71 / 25%);
   margin-bottom: 16px;
 }
 

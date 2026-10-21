@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { api } from '../api';
+import BackToTop from './BackToTop';
 import FolderList from './FolderList';
 import FolderView from './FolderView';
 import PictureCard from './PictureCard';
@@ -22,10 +24,12 @@ function sortCards(cards) {
 
 export default function PicturesPage() {
   const [cards, setCards] = useState([]);
-  const [selected, setSelected] = useState(null);
+  const [searchParams, setSearchParams] = useSearchParams();
   const [openFolder, setOpenFolder] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const selectedType = searchParams.has('move') ? 'move' : searchParams.has('trip') ? 'trip' : null;
+  const selectedId = selectedType ? searchParams.get(selectedType) : null;
 
   const load = useCallback(async () => {
     try {
@@ -82,19 +86,20 @@ export default function PicturesPage() {
 
   const handleOpen = (item) => {
     setOpenFolder(null);
-    setSelected({ type: item.type, id: item.id });
+    setSearchParams({ [item.type]: item.id });
   };
 
   const backToCards = () => {
     setOpenFolder(null);
-    setSelected(null);
+    setSearchParams({});
     load();
   };
 
   const nothingExists = !loading && !error && cards.length === 0;
-  const selectedCard = selected
-    ? cards.find((c) => c.item.type === selected.type && c.item.id === selected.id)
+  const selectedCard = selectedType && selectedId !== null
+    ? cards.find((c) => c.item.type === selectedType && c.item.id === selectedId)
     : null;
+  const selected = selectedCard?.item || null;
 
   return (
     <div className="pictures-page">
@@ -140,6 +145,7 @@ export default function PicturesPage() {
           )}
         </>
       )}
+      <BackToTop />
     </div>
   );
 }

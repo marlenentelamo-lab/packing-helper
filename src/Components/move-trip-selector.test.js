@@ -180,6 +180,38 @@ test('Manage tasks navigates to the selected move in All Tasks', async () => {
 });
 
 test.each([
+  ['move', move, 'Trips'],
+  ['trip', trip, 'Trips'],
+])('links a %s card to its pictures page entry', async (type, item, switchType) => {
+  const fetchMock = jest.fn((url) => {
+    if (url.endsWith('/moves')) {
+      return Promise.resolve(jsonResponse(type === 'move' ? [item] : []));
+    }
+    if (url.endsWith('/trips')) {
+      return Promise.resolve(jsonResponse(type === 'trip' ? [item] : []));
+    }
+    if (url.endsWith(`/tasks?${type}_id=${item.id}`)) {
+      return Promise.resolve(jsonResponse([]));
+    }
+    throw new Error(`Unexpected request: ${url}`);
+  });
+  global.fetch = fetchMock;
+
+  render(
+    <MemoryRouter>
+      <MoveTripSelector />
+    </MemoryRouter>
+  );
+
+  if (type === 'trip') {
+    fireEvent.click(await screen.findByRole('button', { name: switchType }));
+  }
+
+  const addPicturesLink = await screen.findByRole('link', { name: 'Add pictures' });
+  expect(addPicturesLink).toHaveAttribute('href', `/pictures?${type}=${item.id}`);
+});
+
+test.each([
   ['move', move, 'moves', 'Trips'],
   ['trip', trip, 'trips', 'Trips'],
 ])('marks a %s as completed', async (type, item, endpoint, switchType) => {

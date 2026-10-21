@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { api } from "../api";
+import BackToTop from "./BackToTop";
 import MoveTripCard from "./MoveTripCard";
 import { daysUntil } from "./MovesTripsHelpers";
 
@@ -7,6 +8,7 @@ const ALL_TASKS_PATH = "/all-tasks";
 
 function MoveTripSelector() {
   const [type, setType] = useState("move");
+  const [view, setView] = useState("upcoming");
   const [items, setItems] = useState([]);
   const [tasksByItem, setTasksByItem] = useState({}); 
   const [loading, setLoading] = useState(true);
@@ -62,14 +64,16 @@ function MoveTripSelector() {
     };
   }, [type, endpoint]);
 
-  const sortedItems = [
-    ...items
-      .filter((i) => daysUntil(getDate(i)) >= 0)
-      .sort((a, b) => getDate(a).localeCompare(getDate(b))),
-    ...items
-      .filter((i) => daysUntil(getDate(i)) < 0)
-      .sort((a, b) => getDate(b).localeCompare(getDate(a))),
-  ];
+  const isPast = (item) =>
+    !!item.completion_status || (!!getDate(item) && daysUntil(getDate(item)) < 0);
+
+  const upcomingItems = items
+    .filter((i) => !isPast(i))
+    .sort((a, b) => getDate(a).localeCompare(getDate(b)));
+  const pastItems = items
+    .filter(isPast)
+    .sort((a, b) => getDate(b).localeCompare(getDate(a)));
+  const visibleItems = view === "upcoming" ? upcomingItems : pastItems;
 
   const createItem = async (e) => {
     e.preventDefault();
@@ -95,6 +99,7 @@ function MoveTripSelector() {
       }
       setNewName("");
       setNewDate("");
+      setView(isPast(savedItem) ? "past" : "upcoming");
     } catch (err) {
       console.error(err);
       setError(`Could not ${action} ${type}. Please try again.`);
@@ -137,7 +142,7 @@ function MoveTripSelector() {
         ),
       }));
 
-    setStatus(next); 
+    setStatus(next);
     try {
       await api.put(`/tasks/${task.id}`, {
         task_name: task.task_name,
@@ -149,7 +154,7 @@ function MoveTripSelector() {
       });
     } catch (err) {
       console.error(err);
-      setStatus(!next); 
+      setStatus(!next);
       setError("Could not update the task. Please try again.");
     }
   };
@@ -210,6 +215,26 @@ function MoveTripSelector() {
         </button>
       </div>
 
+      {/* UPCOMING / PAST SWITCH */}
+      <div className="type-switch view-switch" role="group" aria-label="Show upcoming or past">
+        <button
+          type="button"
+          className={`type-switch-btn${view === "upcoming" ? " is-active" : ""}`}
+          onClick={() => setView("upcoming")}
+          disabled={view === "upcoming"}
+        >
+          Upcoming ({upcomingItems.length})
+        </button>
+        <button
+          type="button"
+          className={`type-switch-btn${view === "past" ? " is-active" : ""}`}
+          onClick={() => setView("past")}
+          disabled={view === "past"}
+        >
+          Past ({pastItems.length})
+        </button>
+      </div>
+
       {error && <p className="panel-error">{error}</p>}
 
       {/* CREATE / EDIT A MOVE OR TRIP */}
@@ -258,9 +283,15 @@ function MoveTripSelector() {
         <p className="panel-state">Loading {endpoint}...</p>
       ) : items.length === 0 ? (
         <p className="panel-state">No {endpoint} yet. Add one above.</p>
+      ) : visibleItems.length === 0 ? (
+        <p className="panel-state">
+          {view === "upcoming"
+            ? `No upcoming ${endpoint}. Add one above.`
+            : `No past ${endpoint} yet. They show up here once completed or after their date has passed.`}
+        </p>
       ) : (
         <div className="mt-grid">
-          {sortedItems.map((item) => (
+          {visibleItems.map((item) => (
             <MoveTripCard
               key={item.id}
               item={item}
@@ -277,6 +308,7 @@ function MoveTripSelector() {
           ))}
         </div>
       )}
+      <BackToTop />
     </div>
   );
 }
