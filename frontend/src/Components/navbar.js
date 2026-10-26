@@ -20,7 +20,7 @@ function Navbar({ user, setUser }) {
   return (
     <nav className="navbar">
       <Link to="/dashboard" className="navbar-brand">
-        <img src="/Packing%20short%20colour.png" alt="" className="navbar-logo" />
+        <img src="/packing-helper-logo.png" alt="" className="navbar-logo" />
         <span>Packing Helper</span>
       </Link>
   
