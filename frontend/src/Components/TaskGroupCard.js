@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState } from 'react';
 import {
   countdownText,
   daysUntil,
@@ -7,7 +7,7 @@ import {
   GROUP_LIMIT,
   isOverdue,
   previewTasks,
-} from "./MovesTripsHelpers";
+} from './MovesTripsHelpers';
 
 function TaskGroupCard({
   group,

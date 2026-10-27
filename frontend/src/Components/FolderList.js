@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { api } from '../api';
+import { api } from '../api.js';
 
 export default function FolderList({ selected, onOpen }) {
   const [folders, setFolders] = useState([]);

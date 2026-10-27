@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
-import { api } from "../api";
-import BackToTop from "./BackToTop";
-import MoveTripCard from "./MoveTripCard";
-import { daysUntil } from "./MovesTripsHelpers";
+import { useState, useEffect } from 'react';
+import { api } from '../api.js';
+import BackToTop from './BackToTop';
+import MoveTripCard from './MoveTripCard';
+import { daysUntil } from './MovesTripsHelpers';
 
 const ALL_TASKS_PATH = "/all-tasks";
 

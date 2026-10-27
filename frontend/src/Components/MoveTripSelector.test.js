@@ -1,6 +1,6 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
-import MoveTripSelector from './move-trip-selector';
+import MoveTripSelector from './MoveTripSelector';
 
 const move = { id: 3, name: 'Moving house', target_date: '2026-11-01' };
 const trip = { id: 7, name: 'Summer holiday', trip_date: '2026-12-01' };

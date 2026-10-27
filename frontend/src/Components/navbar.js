@@ -1,6 +1,6 @@
-import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
-import api from "../api";
-import NotificationBell from "./notifications";
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
+import api from '../api.js';
+import NotificationBell from './Notifications';
 
 function Navbar({ user, setUser }) {
   const navigate = useNavigate();

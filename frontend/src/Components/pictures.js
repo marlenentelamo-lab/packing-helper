@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { api } from '../api';
+import { api } from '../api.js';
 import BackToTop from './BackToTop';
 import FolderList from './FolderList';
 import FolderView from './FolderView';

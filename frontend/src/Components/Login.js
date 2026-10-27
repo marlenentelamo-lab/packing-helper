@@ -1,6 +1,6 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import api from "../api";
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import api from '../api.js';
 
 function Login({ onAuthSuccess }) {
   const navigate = useNavigate();

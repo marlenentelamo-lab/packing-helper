@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
 import {
   countdownText,
   daysUntil,
@@ -6,7 +6,7 @@ import {
   formatShort,
   isOverdue,
   previewTasks,
-} from "./MovesTripsHelpers";
+} from './MovesTripsHelpers';
 
 function MoveTripCard({
   item,

@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
-import TaskGroupCard from "./TaskGroupCard";
-import BackToTop from "./BackToTop";
-import { daysUntil } from "./MovesTripsHelpers";
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import TaskGroupCard from './TaskGroupCard';
+import BackToTop from './BackToTop';
+import { daysUntil } from './MovesTripsHelpers';
 
 const API_BASE = "/api";
 

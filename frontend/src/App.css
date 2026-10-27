@@ -58,9 +58,14 @@ body {
 
 .navbar-links {
   display: flex;
+  align-items: center;
   gap: 1rem;
   margin-top: 0.5rem;
   font-weight: bold;
+}
+
+.navbar-user {
+  white-space: nowrap;
 }
 
 .navbar-links .navbar-user,
@@ -416,6 +421,7 @@ body {
 }
 
 .navbar-links .navbar-notifications {
+  color: var(--color-text);
   font-size: 1.2rem;
 }
 
@@ -538,7 +544,7 @@ body {
 }
 
 .dot-move {
-  background: var(--color-accent);
+  background: var(--color-accent-move);
 }
 
 .dot-trip {
@@ -546,7 +552,7 @@ body {
 }
 
 .dot-task {
-  background: var(--color-accent-task);
+  background: var(--color-bg);
 }
 
 .dot-default {

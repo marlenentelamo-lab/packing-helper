@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { api } from '../api';
+import { api } from '../api.js';
 
 const MAX_FILES = 10;          // must match upload.array('images', 10) on the backend
 const MAX_SIZE_MB = 5;         // must match the Multer fileSize limit

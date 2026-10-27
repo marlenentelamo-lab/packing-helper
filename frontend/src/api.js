@@ -9,8 +9,6 @@ async function request(path, { method = "GET", body, headers = {} } = {}) {
 
   if (body !== undefined) {
     if (body instanceof FormData) {
-      // File uploads: send the FormData as-is. Don't set Content-Type here,
-      // the browser adds it along with the multipart boundary.
       options.body = body;
     } else {
       options.headers["Content-Type"] = options.headers["Content-Type"] || "application/json";
@@ -27,10 +25,8 @@ async function request(path, { method = "GET", body, headers = {} } = {}) {
   if (!response.ok) {
     let message = "Request failed";
     if (typeof payload === "string") {
-      // Ignore HTML error pages (e.g. from Multer); they make an unreadable message
       if (payload && !payload.trim().startsWith("<")) message = payload;
     } else if (payload) {
-      // Your backend sends { error: "..." }; keep .message as a fallback
       message = payload.error || payload.message || message;
     }
     throw new Error(message);

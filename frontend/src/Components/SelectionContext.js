@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from 'react';
 
 const STORAGE_KEY = "packing-helper-selection";
 
@@ -9,7 +9,7 @@ function readStored() {
     const raw = localStorage.getItem(STORAGE_KEY);
     return raw ? JSON.parse(raw) : null;
   } catch {
-    return null; // storage blocked or corrupted: start with nothing selected
+    return null;
   }
 }
 
@@ -21,7 +21,6 @@ export function SelectionProvider({ children }) {
       if (selected) localStorage.setItem(STORAGE_KEY, JSON.stringify(selected));
       else localStorage.removeItem(STORAGE_KEY);
     } catch {
-      // storage unavailable: the selection still works, it just won't persist
     }
   }, [selected]);
 
