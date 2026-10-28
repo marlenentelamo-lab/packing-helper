@@ -5,37 +5,16 @@ const express = require("express");
 const cors = require("cors");
 const pool = require("./db");
 
-const errorMiddleware = require("./middleware/errorMiddleware");
-
-const authRouter = require("./routes/authRouter");
-const userRouter = require("./routes/userRouter");
-const taskRouter = require("./routes/taskRouter");
-const moveRouter = require("./routes/moveRouter");
-const tripRouter = require("./routes/tripRouter");
-const notificationRouter = require("./routes/notificationRouter");
-const folderRouter = require("./routes/folderRouter");
-const pictureRouter = require("./routes/pictureRouter");
-
 const app = express();
 
 app.set("trust proxy", 1);
-
-app.use(express.json());
-
-app.get("/api/db-health", async (req, res) => {
-  try {
-    await pool.query("SELECT 1");
-    res.json({ database: "connected" });
-  } catch (error) {
-    console.error("PostgreSQL health check failed:", error);
-    res.status(503).json({ database: "disconnected" });
-  }
-});
 
 app.use(cors({
   origin: process.env.FRONTEND_URL || "http://localhost:3005",
   credentials: true
 }));
+
+app.use(express.json());
 
 app.use(session({
   secret: process.env.SESSION_SECRET || "development-only-secret",
@@ -49,6 +28,27 @@ app.use(session({
 }));
 
 app.use(require("connect-flash")());
+
+app.get("/api/db-health", async (req, res) => {
+  try {
+    await pool.query("SELECT 1");
+    res.json({ database: "connected" });
+  } catch (error) {
+    console.error("PostgreSQL health check failed:", error);
+    res.status(503).json({ database: "disconnected" });
+  }
+});
+
+const errorMiddleware = require("./middleware/errorMiddleware");
+
+const authRouter = require("./routes/authRouter");
+const userRouter = require("./routes/userRouter");
+const taskRouter = require("./routes/taskRouter");
+const moveRouter = require("./routes/moveRouter");
+const tripRouter = require("./routes/tripRouter");
+const notificationRouter = require("./routes/notificationRouter");
+const folderRouter = require("./routes/folderRouter");
+const pictureRouter = require("./routes/pictureRouter");
 
 app.use("/api", authRouter);
 app.use("/api/users", userRouter);
