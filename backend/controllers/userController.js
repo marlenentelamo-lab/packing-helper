@@ -1,5 +1,5 @@
 const bcrypt = require("bcryptjs");
-const pool = require("../db");
+const pool = require("../db/db");
 
 exports.updateProfile = async (req, res) => {
   try {

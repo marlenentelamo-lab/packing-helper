@@ -1,4 +1,4 @@
-const db = require('../db');
+const db = require('../db/db');
 
 const COUNTDOWN_MILESTONES = [
     {days: 7, label: 'in 7 days' },

@@ -1,4 +1,4 @@
-const pool = require('../db');
+const pool = require('../db/db');
 
 const ownedTask = `(
   EXISTS (SELECT 1 FROM moves m WHERE m.id = t.move_id AND m.owner_user_id = $1)

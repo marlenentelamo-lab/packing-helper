@@ -430,6 +430,10 @@ body {
   color: var(--color-link-hover);
 }
 
+.navbar-links .navbar-notifications[aria-expanded="true"] {
+  text-decoration: underline;
+}
+
 .notif-badge {
   min-width: 20px;
   height: 20px;
@@ -477,27 +481,67 @@ body {
   align-items: center;
   justify-content: space-between;
   padding: 12px 14px;
-  border-bottom: 1px solid var(--color-border);
 }
 
 .notif-panel-title {
-  font-size: 14px;
-  font-weight: 600;
+  font-size: 16px;
+  font-weight: 700;
   color: var(--color-text);
 }
 
 .mark-all-button {
-  border: none;
-  background: none;
-  color: var(--color-accent);
-  font-size: 12.5px;
+  min-height: 36px;
+  padding: 0 12px;
+  border: 1px solid var(--color-text);
+  border-radius: 8px;
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-size: 13px;
   font-weight: 500;
   cursor: pointer;
-  padding: 2px 4px;
 }
 
 .mark-all-button:hover {
-  text-decoration: underline;
+  background: var(--color-bg-hover);
+}
+
+.panel-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 18px;
+  padding: 0 14px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.panel-tab {
+  min-height: 44px;
+  padding: 0 2px;
+  border: none;
+  border-bottom: 3px solid transparent;
+  background: none;
+  color: var(--color-text);
+  opacity: 0.7;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.panel-tab:hover {
+  opacity: 1;
+}
+
+.panel-tab.is-active {
+  opacity: 1;
+  border-bottom-color: var(--color-text);
+}
+
+.panel-tab:focus-visible,
+.notification-item:focus-visible,
+.item-delete:focus-visible,
+.mark-all-button:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
 }
 
 .panel-body {
@@ -506,13 +550,19 @@ body {
 
 .notification-panel .panel-state {
   padding: 28px 16px;
+  text-align: center;
+  color: var(--color-text);
+}
+
+.panel-error {
+  color: var(--color-danger);
 }
 
 .notification-item {
   display: flex;
   align-items: flex-start;
-  gap: 10px;
-  padding: 12px 14px;
+  gap: 14px;
+  padding: 10px 6px 10px 18px;
   border-bottom: 1px solid var(--color-border);
   cursor: pointer;
   transition: background 0.1s ease;
@@ -535,25 +585,60 @@ body {
   background: transparent;
 }
 
+.item-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.item-message {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.notification-item.is-read .item-message {
+  font-weight: 400;
+}
+
+.item-date {
+  display: block;
+  margin-top: 2px;
+  font-size: 13px;
+  color: var(--color-text);
+  opacity: 0.8;
+}
+
+.item-delete {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  margin-top: -6px;
+  border: none;
+  background: none;
+  color: var(--color-text);
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.item-delete:hover {
+  color: var(--color-danger);
+}
+
 .type-dot {
   flex-shrink: 0;
-  width: 8px;
-  height: 8px;
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
-  margin-top: 5px;
+  margin-top: 6px;
 }
 
-.dot-move {
-  background: var(--color-accent-move);
-}
-
-.dot-trip {
-  background: var(--color-accent-trip);
-}
-
-.dot-task {
-  background: var(--color-bg);
-}
+.dot-move    { background: var(--color-accent-move); }
+.dot-trip    { background: var(--color-accent-trip); }
+.dot-task    { background: var(--color-text); }
+.dot-overdue { background: var(--color-danger); }
+.dot-default { background: var(--color-border); }
 
 .dot-default {
   background: var(--color-border);
