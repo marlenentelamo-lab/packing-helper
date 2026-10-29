@@ -3,7 +3,7 @@ require("dotenv").config();
 const session = require("express-session");
 const express = require("express");
 const cors = require("cors");
-const pool = require("./db");
+const pool = require("./db/db");
 
 const app = express();
 
@@ -30,6 +30,7 @@ app.use(session({
 app.use(require("connect-flash")());
 
 app.get("/api/db-health", async (req, res) => {
+console.log("Performing PostgreSQL health check...");
   try {
     await pool.query("SELECT 1");
     res.json({ database: "connected" });
