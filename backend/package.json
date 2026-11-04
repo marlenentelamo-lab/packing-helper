@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "node --test",
-     "start": "node server.js"
+    "start": "node server.js"
   },
   "keywords": [],
   "type": "commonjs",
@@ -13,6 +13,7 @@
     "bcryptjs": "^3.0.3",
     "cloudinary": "^2.11.0",
     "connect-flash": "^0.1.1",
+    "connect-pg-simple": "^10.0.0",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "ejs": "^6.0.1",

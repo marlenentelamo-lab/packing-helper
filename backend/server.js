@@ -1,6 +1,7 @@
 require("dotenv").config();
 
 const session = require("express-session");
+const pgSession = require("connect-pg-simple")(session);
 const express = require("express");
 const cors = require("cors");
 const pool = require("./db/db");
@@ -16,16 +17,26 @@ app.use(cors({
 
 app.use(express.json());
 
-app.use(session({
-  secret: process.env.SESSION_SECRET || "development-only-secret",
-  resave: false,
-  saveUninitialized: false,
-  cookie: {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax"
-  }
-}));
+app.use(
+  session({
+    store: new pgSession({
+      pool: pool,
+      tableName: "user_sessions",
+      createTableIfMissing: true,
+    }),
+
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+
+    cookie: {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite:
+        process.env.NODE_ENV === "production" ? "none" : "lax",
+    },
+  })
+);
 
 app.use(require("connect-flash")());
 
