@@ -7,7 +7,7 @@ import Signup from './Components/Signup';
 import Navbar from './Components/Navbar';
 import Dashboard from './Components/Dashboard';
 import Pictures from './Components/Pictures';
-import { NotificationsPage } from './Components/Notifications';
+import { NotificationsPage } from './Components/notifications';
 import MoveTripSelector from './Components/MoveTripSelector';
 import AllTasks from './Components/AllTasks';
 import { SelectionProvider } from './Components/SelectionContext';
