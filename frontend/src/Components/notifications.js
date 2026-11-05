@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { apiUrl } from '../api.js';
 
 const POLL_INTERVAL_MS = 60000;
 
@@ -9,9 +10,10 @@ const TYPE_META = {
 }
 
 const isOverdue = (n) => /overdue/i.test(n.message || '');
+const notificationUrl = (path, apiBaseUrl) => apiUrl(path, apiBaseUrl || undefined);
 
 const TABS = [
-  { id: 'all', label: 'All', test: () => true, empty: "You're all caught up." },
+  { id: 'unread', label: 'Unread', test: (n) => !n.is_read, empty: 'No unread notifications.' },
   { id: 'tasks', label: 'Tasks', test: (n) => n.type === 'task_due', empty: 'No task notifications.' },
   {
     id: 'moves',
@@ -19,7 +21,7 @@ const TABS = [
     test: (n) => n.type === 'move_countdown' || n.type === 'trip_countdown',
     empty: 'No move or trip notifications.',
   },
-  { id: 'unread', label: 'Unread', test: (n) => !n.is_read, empty: 'No unread notifications.' },
+  { id: 'all', label: 'All', test: () => true, empty: "You're all caught up." },
 ];
 
 function formatTriggerDate(dateStr) {
@@ -48,7 +50,10 @@ export default function NotificationBell({
 
   const fetchNotifications = useCallback(async () => {
     try {
-      const res = await fetch(`${apiBaseUrl}/api/notifications`, { credentials: 'include' });
+      const res = await fetch(
+        notificationUrl('/notifications', apiBaseUrl),
+        { credentials: 'include' }
+      );
       if (!res.ok) throw new Error('Request failed');
       const data = await res.json();
       setNotifications(data);
@@ -101,10 +106,13 @@ export default function NotificationBell({
 
   const markAsRead = useCallback(async (notificationId) => {
       try {
-        const res = await fetch(`${apiBaseUrl}/api/notifications/${notificationId}/read`, {
-          method: 'PATCH',
-          credentials: 'include',
-        });
+        const res = await fetch(
+          notificationUrl(`/notifications/${notificationId}/read`, apiBaseUrl),
+          {
+            method: 'PATCH',
+            credentials: 'include',
+          }
+        );
         if (!res.ok) throw new Error('Failed to mark notification as read');
         fetchNotifications();
       } catch (err) {
@@ -114,7 +122,7 @@ export default function NotificationBell({
   
     const markAllAsRead = useCallback(async () => {
       try {
-        const res = await fetch(`${apiBaseUrl}/api/notifications/read`, {
+        const res = await fetch(notificationUrl('/notifications/read', apiBaseUrl), {
           method: 'PATCH',
           credentials: 'include',
         });
@@ -128,10 +136,13 @@ export default function NotificationBell({
     const deleteNotification = useCallback(async (notificationId, event) => {
       event?.stopPropagation?.();
       try {
-        const res = await fetch(`${apiBaseUrl}/api/notifications/${notificationId}`, {
-          method: 'DELETE',
-          credentials: 'include',
-        });
+        const res = await fetch(
+          notificationUrl(`/notifications/${notificationId}`, apiBaseUrl),
+          {
+            method: 'DELETE',
+            credentials: 'include',
+          }
+        );
         if (!res.ok) throw new Error('Failed to delete notification');
         fetchNotifications();
       } catch (err) {

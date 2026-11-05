@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
-
-const API_BASE = "/api";
+import { apiUrl } from '../api.js';
 
 function isOverdue(task) {
   if (!task?.due_date || task.completion_status) {
@@ -42,7 +41,7 @@ function Task({ moveId, tripId }) {
       setError("");
 
       try {
-        const res = await fetch(`${API_BASE}/tasks?${parentQuery}`, {
+        const res = await fetch(apiUrl(`/tasks?${parentQuery}`), {
           credentials: "include",
         });
 
@@ -78,7 +77,7 @@ function Task({ moveId, tripId }) {
     }
 
     try {
-      const res = await fetch(`${API_BASE}/tasks`, {
+      const res = await fetch(apiUrl("/tasks"), {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
@@ -106,7 +105,7 @@ function Task({ moveId, tripId }) {
 
       const deleteTask = async (id) => {
       try {
-        const res = await fetch(`${API_BASE}/tasks/${id}`, {
+        const res = await fetch(apiUrl(`/tasks/${id}`), {
           method: "DELETE",
           credentials: "include",
         });
@@ -124,7 +123,7 @@ function Task({ moveId, tripId }) {
 
       const toggleCompleted = async (task) => {
       try {
-        const res = await fetch(`${API_BASE}/tasks/${task.id}`, {
+        const res = await fetch(apiUrl(`/tasks/${task.id}`), {
           method: "PUT",
           credentials: "include",
           headers: { "Content-Type": "application/json" },
@@ -159,7 +158,7 @@ function Task({ moveId, tripId }) {
       e.preventDefault();
 
       try {
-        const res = await fetch(`${API_BASE}/tasks/${editingId}`, {
+        const res = await fetch(apiUrl(`/tasks/${editingId}`), {
           method: "PUT",
           credentials: "include",
           headers: { "Content-Type": "application/json" },

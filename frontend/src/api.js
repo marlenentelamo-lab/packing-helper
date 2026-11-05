@@ -1,4 +1,8 @@
-const API_BASE = "/api";
+const API_ORIGIN =
+  process.env.NODE_ENV === "test" ? "" : process.env.REACT_APP_API_URL || "";
+
+export const apiUrl = (path, apiOrigin = API_ORIGIN) =>
+  `${apiOrigin.replace(/\/+$/, "")}/api${path}`;
 
 async function request(path, { method = "GET", body, headers = {} } = {}) {
   const options = {
@@ -16,7 +20,7 @@ async function request(path, { method = "GET", body, headers = {} } = {}) {
     }
   }
 
-  const response = await fetch(`${API_BASE}${path}`, options);
+  const response = await fetch(apiUrl(path), options);
   const contentType = response.headers.get("content-type") || "";
   const payload = contentType.includes("application/json")
     ? await response.json().catch(() => null)

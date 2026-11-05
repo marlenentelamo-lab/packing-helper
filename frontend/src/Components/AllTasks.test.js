@@ -148,11 +148,11 @@ test('marks a move as completed from the All Tasks page', async () => {
   const checkbox = await screen.findByRole('checkbox', {
     name: 'Mark Moving house as completed',
   });
-  const countdownBefore = screen.getByText(/days to go|since this/).textContent;
   fireEvent.click(checkbox);
 
-  await waitFor(() => expect(checkbox).toBeChecked());
-  expect(screen.getByText(countdownBefore)).toBeInTheDocument();
+  await waitFor(() => {
+    expect(screen.queryByRole('heading', { name: 'Moving house' })).not.toBeInTheDocument();
+  });
   expect(fetchMock).toHaveBeenCalledWith('/api/moves/3', expect.objectContaining({
     method: 'PUT',
     body: JSON.stringify({ completion_status: true }),
@@ -162,17 +162,13 @@ test('marks a move as completed from the All Tasks page', async () => {
 test.each([
   ['move', { id: 3, name: 'Moving house', target_date: '2026-11-01' }, 'moves'],
   ['trip', { id: 7, name: 'Summer holiday', trip_date: '2026-12-01' }, 'trips'],
-])('allows a completed %s to be marked not completed from the All Tasks page', async (
+])('does not show a completed %s on the All Tasks page', async (
   type,
   item,
   endpoint,
 ) => {
   const completedItem = { ...item, completion_status: true };
-  const updatedItem = { ...item, completion_status: false };
   const fetchMock = jest.fn((url, options) => {
-    if (url.endsWith(`/${endpoint}/${item.id}`) && options?.method === 'PUT') {
-      return Promise.resolve(jsonResponse(updatedItem));
-    }
     if (url.endsWith('/tasks')) return Promise.resolve(jsonResponse([]));
     if (url.endsWith('/moves')) {
       return Promise.resolve(jsonResponse(type === 'move' ? [completedItem] : []));
@@ -186,17 +182,7 @@ test.each([
 
   renderAllTasks();
 
-  const checkbox = await screen.findByRole('checkbox', {
-    name: `Mark ${item.name} as not completed`,
-  });
-  expect(checkbox).toBeChecked();
-  const countdownBefore = screen.getByText(/days to go|since this/).textContent;
-  fireEvent.click(checkbox);
-
-  await waitFor(() => expect(checkbox).not.toBeChecked());
-  expect(screen.getByText(countdownBefore)).toBeInTheDocument();
-  expect(fetchMock).toHaveBeenCalledWith(`/api/${endpoint}/${item.id}`, expect.objectContaining({
-    method: 'PUT',
-    body: JSON.stringify({ completion_status: false }),
-  }));
+  expect(await screen.findByText('No active moves or trips. Add one on the Moves & Trips page.')).toBeInTheDocument();
+  expect(screen.queryByRole('heading', { name: item.name })).not.toBeInTheDocument();
+  expect(fetchMock).not.toHaveBeenCalledWith(`/api/${endpoint}/${item.id}`, expect.anything());
 });

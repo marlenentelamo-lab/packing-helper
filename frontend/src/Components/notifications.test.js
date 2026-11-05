@@ -53,6 +53,19 @@ test('loads notifications and displays the unread count when opened', async () =
   expect(screen.getByRole('button', { name: 'Mark all read' })).toBeInTheDocument();
 });
 
+test('orders notification filters with unread first and all last', async () => {
+  render(<NotificationBell />);
+  fireEvent.click(await screen.findByRole('button', { name: 'Notifications, 1 unread' }));
+
+  const tabs = await screen.findAllByRole('tab');
+  expect(tabs.map((tab) => tab.textContent)).toEqual([
+    'Unread (1)',
+    'Tasks',
+    'Moves & Trips',
+    'All',
+  ]);
+});
+
 test('loads new notifications on the next poll', async () => {
   const newNotification = {
     id: 3,

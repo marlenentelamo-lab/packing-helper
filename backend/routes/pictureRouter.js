@@ -1,4 +1,3 @@
-// routes/pictureRouter.js
 const express = require('express');
 const { uploadPictures, getPictures } = require('../controllers/pictureController');
 const { ensureAuth } = require('../middleware/authMiddleware');

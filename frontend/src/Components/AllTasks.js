@@ -3,14 +3,13 @@ import { useSearchParams } from 'react-router-dom';
 import TaskGroupCard from './TaskGroupCard';
 import BackToTop from './BackToTop';
 import { daysUntil } from './MovesTripsHelpers';
-
-const API_BASE = "/api";
+import { apiUrl } from '../api.js';
 
 const sameId = (a, b) => String(a) === String(b);
 
 function buildGroups(moves, trips, tasks) {
     const groups = [
-        ...moves.map((m) => ({
+        ...moves.filter((move) => !move.completion_status).map((m) => ({
             key: `move-${m.id}`,
             type: "move",
             id: m.id,
@@ -19,7 +18,7 @@ function buildGroups(moves, trips, tasks) {
             completion_status: m.completion_status,
             tasks: tasks.filter((t) => sameId(t.move_id, m.id)),
         })),
-        ...trips.map((t) => ({
+        ...trips.filter((trip) => !trip.completion_status).map((t) => ({
             key: `trip-${t.id}`,
             type: "trip",
             id: t.id,
@@ -73,9 +72,9 @@ function AllTasks() {
 
         try {
             const [tasksRes, movesRes, tripsRes] = await Promise.all([
-                fetch(`${API_BASE}/tasks`, { credentials: "include" }),
-                fetch(`${API_BASE}/moves`, { credentials: "include" }),
-                fetch(`${API_BASE}/trips`, { credentials: "include" }),
+                fetch(apiUrl("/tasks"), { credentials: "include" }),
+                fetch(apiUrl("/moves"), { credentials: "include" }),
+                fetch(apiUrl("/trips"), { credentials: "include" }),
             ]);
 
             if (!tasksRes.ok || !movesRes.ok || !tripsRes.ok) {
@@ -124,7 +123,7 @@ function AllTasks() {
 
         try {
             const res = await fetch(
-                `${API_BASE}/tasks${isEditing ? `/${editingTask.id}` : ""}`,
+                apiUrl(`/tasks${isEditing ? `/${editingTask.id}` : ""}`),
                 {
                 method: isEditing ? "PUT" : "POST",
                 credentials: "include",
@@ -167,7 +166,7 @@ function AllTasks() {
 
     const toggleTaskCompletion = async (task) => {
         try {
-            const res = await fetch(`${API_BASE}/tasks/${task.id}`, {
+            const res = await fetch(apiUrl(`/tasks/${task.id}`), {
                 method: "PUT",
                 credentials: "include",
                 headers: { "Content-Type": "application/json" },
@@ -199,7 +198,7 @@ function AllTasks() {
 
         const isMove = group.type === "move";
         try {
-            const res = await fetch(`${API_BASE}/${isMove ? "moves" : "trips"}/${group.id}`, {
+            const res = await fetch(apiUrl(`/${isMove ? "moves" : "trips"}/${group.id}`), {
                 method: "PUT",
                 credentials: "include",
                 headers: { "Content-Type": "application/json" },
@@ -229,7 +228,7 @@ function AllTasks() {
 
     const deleteTask = async (taskId) => {
         try {
-            const res = await fetch(`${API_BASE}/tasks/${taskId}`, {
+            const res = await fetch(apiUrl(`/tasks/${taskId}`), {
                 method: "DELETE",
                 credentials: "include",
             });
@@ -311,7 +310,7 @@ function AllTasks() {
     {loading ? (
         <p className="task-list-state">Loading...</p>
     ) : groups.length === 0 ? (
-        <p className="task-list-state">No moves or trips yet. Add one on the Moves & Trips page.</p>
+        <p className="task-list-state">No active moves or trips. Add one on the Moves & Trips page.</p>
     ) : (
         <div className="mt-grid">
             {groups.map((group) => (
