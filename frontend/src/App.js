@@ -6,7 +6,7 @@ import Login from './Components/Login';
 import Signup from './Components/Signup';
 import ForgotPassword from './Components/ForgotPassword';
 import ResetPassword from './Components/ResetPassword';
-import Navbar from './Components/Navbar';
+import Navbar from './Components/navbar';
 import Dashboard from './Components/Dashboard';
 import Pictures from './Components/pictures';
 import { NotificationsPage } from './Components/notifications';
