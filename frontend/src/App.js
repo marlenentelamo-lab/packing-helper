@@ -4,6 +4,8 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import api from './api.js';
 import Login from './Components/Login';
 import Signup from './Components/Signup';
+import ForgotPassword from './Components/ForgotPassword';
+import ResetPassword from './Components/ResetPassword';
 import Navbar from './Components/Navbar';
 import Dashboard from './Components/Dashboard';
 import Pictures from './Components/pictures';
