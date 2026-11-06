@@ -4,7 +4,7 @@ import api from '../api.js';
 
 function Login({ onAuthSuccess }) {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({ username: "", password: "" });
+  const [formData, setFormData] = useState({ email: "", password: "" });
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
@@ -61,6 +61,9 @@ function Login({ onAuthSuccess }) {
 
   <p className="auth-switch">
     Need an account? <Link to="/signup">Sign up</Link>
+  </p>
+  <p className="auth-switch">
+    <Link to="/forgot-password">Forgot password?</Link>
   </p>
 </div>
       {message && <p style={{ color: "green" }}>{message}</p>}

@@ -18,6 +18,11 @@ Production API requests use `REACT_APP_API_URL` from `.env.production`. Set
 `FRONTEND_URL` on the backend to the deployed frontend origin so credentialed
 API requests can use the session cookie.
 
+Password reset requires applying `backend/migrations/003_password_reset_tokens.sql`
+and configuring `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, and optionally
+`SMTP_FROM` on the backend. `FRONTEND_URL` must be the frontend origin; reset
+links expire after 30 minutes.
+
 ### `npm test`
 
 Launches the test runner in the interactive watch mode.\
