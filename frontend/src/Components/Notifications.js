@@ -183,7 +183,7 @@ export default function NotificationBell({
           </span>
     
           {isOpen && (
-            <div className="notification-panel" ref={panelRef} role="dialog" aria-label="Notifications">
+            <div className="notification-panel" ref={panelRef} role="menu" aria-label="Notifications">
               <div className="panel-header">
                 <span className="notif-panel-title">Notifications</span>
                 {unreadCount > 0 && (
@@ -233,7 +233,7 @@ export default function NotificationBell({
                             handleActivate();
                           }
                         }}
-                        role="button"
+                        role="menuitem"
                         tabIndex={0}
                       >
                         <span className={`type-dot ${dotClass}`} aria-hidden="true" />

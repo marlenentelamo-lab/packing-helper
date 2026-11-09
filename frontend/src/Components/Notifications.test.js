@@ -1,7 +1,7 @@
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
-import Navbar from './navbar';
-import NotificationBell, { NotificationsPage } from './notifications';
+import Navbar from './Navbar';
+import NotificationBell, { NotificationsPage } from './Notifications';
 
 const notifications = [
   {
