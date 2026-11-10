@@ -63,3 +63,41 @@ exports.uploadPictures = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+exports.deletePicture = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const picture = await pool.query(
+      `SELECT p.cloudinary_public_id FROM pictures p
+       JOIN picture_folders f ON f.id = p.folder_id
+       WHERE p.id = $1
+         AND (
+           EXISTS (SELECT 1 FROM moves m WHERE m.id = f.move_id AND m.owner_user_id = $2)
+           OR EXISTS (SELECT 1 FROM trips t WHERE t.id = f.trip_id AND t.owner_user_id = $2)
+         )`,
+      [id, req.user.id]
+    );
+    if (!picture.rows.length) {
+      return res.status(404).json({ error: 'Picture not found' });
+    }
+
+    if (picture.rows[0].cloudinary_public_id) {
+      await cloudinary.uploader.destroy(picture.rows[0].cloudinary_public_id);
+    }
+
+    await pool.query(
+      `DELETE FROM pictures p
+       USING picture_folders f
+       WHERE p.id = $1 AND f.id = p.folder_id
+         AND (
+           EXISTS (SELECT 1 FROM moves m WHERE m.id = f.move_id AND m.owner_user_id = $2)
+           OR EXISTS (SELECT 1 FROM trips t WHERE t.id = f.trip_id AND t.owner_user_id = $2)
+         )`,
+      [id, req.user.id]
+    );
+    return res.json({ message: 'Picture deleted' });
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
+};

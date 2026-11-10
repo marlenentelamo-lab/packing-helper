@@ -76,48 +76,50 @@ function App() {
         <div className="App">
           <Navbar user={user} setUser={setUser} />
 
-          <Routes>
-            <Route
-              path="/login"
-              element={
-                <PublicRoute user={user} authReady={authReady}>
-                  <Login onAuthSuccess={setUser} />
-                </PublicRoute>
-              }
-            />
-            <Route
-              path="/signup"
-              element={
-                <PublicRoute user={user} authReady={authReady}>
-                  <Signup />
-                </PublicRoute>
-              }
-            />
-            <Route
-              path="/forgot-password"
-              element={
-                <PublicRoute user={user} authReady={authReady}>
-                  <ForgotPassword />
-                </PublicRoute>
-              }
-            />
-            <Route
-              path="/reset-password"
-              element={
-                <PublicRoute user={user} authReady={authReady}>
-                  <ResetPassword />
-                </PublicRoute>
-              }
-            />
-            <Route path="/" element={<ProtectedRoute user={user} authReady={authReady}><Dashboard /></ProtectedRoute>} />
-            <Route path="/tasks" element={<Navigate to="/all-tasks" replace />} />
-            <Route path="/pictures" element={<ProtectedRoute user={user} authReady={authReady}><Pictures /></ProtectedRoute>} />
-            <Route path="/notifications" element={<ProtectedRoute user={user} authReady={authReady}><NotificationsPage /></ProtectedRoute>} />
-            <Route path="/move-trip-selector" element={<ProtectedRoute user={user} authReady={authReady}><MoveTripSelector /></ProtectedRoute>} />
-            <Route path="/all-tasks" element={<ProtectedRoute user={user} authReady={authReady}><AllTasks /></ProtectedRoute>} />
-            <Route path="/dashboard" element={<ProtectedRoute user={user} authReady={authReady}><Dashboard /></ProtectedRoute>} />
-            <Route path="*" element={<Navigate to="/dashboard" replace />} />
-          </Routes>
+          <main>
+            <Routes>
+              <Route
+                path="/login"
+                element={
+                  <PublicRoute user={user} authReady={authReady}>
+                    <Login onAuthSuccess={setUser} />
+                  </PublicRoute>
+                }
+              />
+              <Route
+                path="/signup"
+                element={
+                  <PublicRoute user={user} authReady={authReady}>
+                    <Signup />
+                  </PublicRoute>
+                }
+              />
+              <Route
+                path="/forgot-password"
+                element={
+                  <PublicRoute user={user} authReady={authReady}>
+                    <ForgotPassword />
+                  </PublicRoute>
+                }
+              />
+              <Route
+                path="/reset-password"
+                element={
+                  <PublicRoute user={user} authReady={authReady}>
+                    <ResetPassword />
+                  </PublicRoute>
+                }
+              />
+              <Route path="/" element={<ProtectedRoute user={user} authReady={authReady}><Dashboard /></ProtectedRoute>} />
+              <Route path="/tasks" element={<Navigate to="/all-tasks" replace />} />
+              <Route path="/pictures" element={<ProtectedRoute user={user} authReady={authReady}><Pictures /></ProtectedRoute>} />
+              <Route path="/notifications" element={<ProtectedRoute user={user} authReady={authReady}><NotificationsPage /></ProtectedRoute>} />
+              <Route path="/move-trip-selector" element={<ProtectedRoute user={user} authReady={authReady}><MoveTripSelector /></ProtectedRoute>} />
+              <Route path="/all-tasks" element={<ProtectedRoute user={user} authReady={authReady}><AllTasks /></ProtectedRoute>} />
+              <Route path="/dashboard" element={<ProtectedRoute user={user} authReady={authReady}><Dashboard /></ProtectedRoute>} />
+              <Route path="*" element={<Navigate to="/dashboard" replace />} />
+            </Routes>
+          </main>
         </div>
       </Router>
     </SelectionProvider>

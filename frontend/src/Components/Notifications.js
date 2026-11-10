@@ -260,9 +260,9 @@ export default function NotificationBell({
     
     export function NotificationsPage() {
       return (
-        <main className="move-trip-panel">
+        <section className="move-trip-panel">
           <h1 className="panel-title">Notifications</h1>
-        </main>
+        </section>
       );
     }
   
