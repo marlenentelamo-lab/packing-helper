@@ -118,16 +118,17 @@ export default function Dashboard() {
     setSelected(fallback ? { type: fallback.type, id: fallback.id } : null);
   }, [loadingItems, error, current, items, setSelected]);
 
-  const currentKey = current ? `${current.type}:${current.id}` : null;
+  const currentType = current?.type ?? null;
+  const currentId = current?.id ?? null;
     useEffect(() => {
-      if (!current) {
+      if (currentType === null || currentId === null) {
         setTasks([]);
         setFolders([]);
         return;
       }
       let cancelled = false; 
-      const idKey = current.type === "move" ? "move_id" : "trip_id";
-      const query = `${idKey}=${encodeURIComponent(current.id)}`;
+      const idKey = currentType === "move" ? "move_id" : "trip_id";
+      const query = `${idKey}=${encodeURIComponent(currentId)}`;
   
       setLoadingDetails(true);
       setError("");
@@ -147,7 +148,7 @@ export default function Dashboard() {
       return () => {
         cancelled = true;
       };
-    }, [currentKey]);
+    }, [currentType, currentId]);
   
     const handleSelect = (e) => {
       if (!e.target.value) return;
