@@ -8,10 +8,8 @@ export default function FolderList({ selected, onOpen }) {
   const [creating, setCreating] = useState(false);
   const [error, setError] = useState('');
 
-  // The backend wants ?move_id=... or ?trip_id=... (exactly one)
   const idKey = selected.type === 'move' ? 'move_id' : 'trip_id';
 
-  // Reload whenever the user picks a different move or trip
   useEffect(() => {
     setLoading(true);
     setError('');
@@ -28,7 +26,6 @@ export default function FolderList({ selected, onOpen }) {
     setCreating(true);
     setError('');
     try {
-      // The move/trip id comes from state, so the user never types it
       const newFolder = await api.post('/picture-folders', {
         folder_name: folderName.trim(),
         [idKey]: selected.id,

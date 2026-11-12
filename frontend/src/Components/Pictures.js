@@ -63,7 +63,7 @@ export default function PicturesPage() {
           return {
             item: {
               type,
-              id: String(row.id), // keep id as a string so UUIDs work too
+              id: String(row.id), 
               name: row.name,
               date: String(row[DATE_FIELD[type]] || '').slice(0, 10),
             },

@@ -125,7 +125,7 @@ export default function Dashboard() {
         setFolders([]);
         return;
       }
-      let cancelled = false; // ignore late responses if the user switches quickly
+      let cancelled = false; 
       const idKey = current.type === "move" ? "move_id" : "trip_id";
       const query = `${idKey}=${encodeURIComponent(current.id)}`;
   
@@ -147,7 +147,6 @@ export default function Dashboard() {
       return () => {
         cancelled = true;
       };
-      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentKey]);
   
     const handleSelect = (e) => {
@@ -155,8 +154,7 @@ export default function Dashboard() {
       const [type, id] = e.target.value.split(":");
       setSelected({ type, id });
     };
-  
-    // Tick a task off straight from the dashboard
+
     const completeTask = async (task) => {
       setError("");
       try {

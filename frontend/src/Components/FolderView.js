@@ -1,18 +1,16 @@
 import { useEffect, useState } from 'react';
 import { api } from '../api.js';
 
-const MAX_FILES = 10;          // must match upload.array('images', 10) on the backend
-const MAX_SIZE_MB = 5;         // must match the Multer fileSize limit
+const MAX_FILES = 10;          
+const MAX_SIZE_MB = 5;         
 
-// Ask Cloudinary for a small, cropped, compressed version for the grid.
-// The full-size original opens when the thumbnail is clicked.
 const thumbUrl = (url) =>
   url.replace('/upload/', '/upload/w_400,h_400,c_fill,q_auto,f_auto/');
 
 export default function FolderView({ folder, onBack }) {
   const [pictures, setPictures] = useState([]);
   const [files, setFiles] = useState([]);
-  const [inputKey, setInputKey] = useState(0); // changing this clears the file input
+  const [inputKey, setInputKey] = useState(0); 
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState('');
@@ -55,8 +53,8 @@ export default function FolderView({ folder, onBack }) {
     setError('');
     try {
       const formData = new FormData();
-      formData.append('folder_id', folder.id); // this is what ties the pictures to THIS folder
-      files.forEach((file) => formData.append('images', file)); // 'images' must match upload.array('images')
+      formData.append('folder_id', folder.id); 
+      files.forEach((file) => formData.append('images', file)); 
 
       const saved = await api.upload('/pictures', formData);
       setPictures([...pictures, ...saved]);

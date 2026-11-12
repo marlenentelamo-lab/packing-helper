@@ -143,7 +143,7 @@ function AllTasks() {
             }
 
             resetForm();
-            await loadAll(); // Refresh the list of tasks after adding a new one
+            await loadAll(); 
         } catch (err) {
             console.error(err);
             setError(`Could not ${isEditing ? "save changes" : "add task"}. Please try again.`);
@@ -161,7 +161,7 @@ function AllTasks() {
                 ? `trip:${task.trip_id}`
                 : "",
         );
-        window.scrollTo({ top: 0, behavior: "smooth" }); // the form is at the top of the page
+        window.scrollTo({ top: 0, behavior: "smooth" }); 
     };
 
     const toggleTaskCompletion = async (task) => {
@@ -174,7 +174,6 @@ function AllTasks() {
                     task_name: task.task_name,
                     due_date: task.due_date ? task.due_date.slice(0, 10) : null,
                     completion_status: !task.completion_status,
-                    // sent so the update can never clear the task's move or trip
                     move_id: task.move_id ?? null,
                     trip_id: task.trip_id ?? null,
                 }),
@@ -184,7 +183,7 @@ function AllTasks() {
                 throw new Error("Failed to update task.");
             }
 
-            await loadAll(); // Refresh the list of tasks after updating completion status
+            await loadAll(); 
         } catch (err) {
             console.error(err);
             setError("Could not update task. Please try again.");
@@ -237,7 +236,7 @@ function AllTasks() {
                 throw new Error("Failed to delete task.");
             }
 
-            await loadAll(); // Refresh the list of tasks after deleting
+            await loadAll(); 
         } catch (err) {
             console.error(err);
             setError("Could not delete task. Please try again.");
