@@ -10,7 +10,7 @@ const app = express();
 
 app.set("trust proxy", 1);
 
-const allowedOrigins = ['http://localhost:3005', 'https://packinghelper.netlify.app'];
+const allowedOrigins = 'http://localhost:3005';
 
 app.use((req, res, next) => {
   const origin = req.headers.origin;
