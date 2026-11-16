@@ -43,7 +43,7 @@ export default function NotificationBell({
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [announcement, setAnnouncement] = useState('');
-  const [activeTab, setActiveTab] = useState('all');
+  const [activeTab, setActiveTab] = useState('unread');
   const panelRef = useRef(null);
   const buttonRef = useRef(null);
   const previousCount = useRef(null);

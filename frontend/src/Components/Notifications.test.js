@@ -49,7 +49,8 @@ test('loads notifications and displays the unread count when opened', async () =
   fireEvent.click(bell);
 
   expect(await screen.findByText('Move coming up')).toBeInTheDocument();
-  expect(screen.getByText('Task due today')).toBeInTheDocument();
+  expect(screen.queryByText('Task due today')).not.toBeInTheDocument();
+  expect(screen.getByRole('tab', { name: 'Unread (1)' })).toHaveAttribute('aria-selected', 'true');
   expect(screen.getByRole('button', { name: 'Mark all read' })).toBeInTheDocument();
 });
 
