@@ -1718,12 +1718,19 @@ body {
   right: 24px;
   bottom: 24px;
   z-index: 1000;
+  background: var(--color-accent);
+  color: #ffffff;
+  border: 1px solid var(--color-border);
   box-shadow: 0 2px 8px rgb(0 33 71 / 25%);
   margin-bottom: 16px;
   opacity: 0;
   visibility: hidden;
   transform: translateY(8px);
   transition: opacity 200ms ease, transform 200ms ease, visibility 0s linear 200ms;
+}
+
+.back-to-top:hover {
+  background: #003366;
 }
 
 .back-to-top.is-visible {

@@ -17,7 +17,7 @@ function BackToTop() {
   return (
     <button
       type="button"
-      className={`back-to-top btn btn-primary${isVisible ? ' is-visible' : ''}`}
+      className={`back-to-top btn btn-secondary${isVisible ? ' is-visible' : ''}`}
       aria-label="Back to top"
       aria-hidden={!isVisible}
       tabIndex={isVisible ? 0 : -1}
