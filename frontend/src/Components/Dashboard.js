@@ -378,7 +378,7 @@ export default function Dashboard() {
                       <Link to={ROUTES.tasks} className="btn btn-primary">
                         + Add task
                       </Link>
-                      <Link to={ROUTES.pictures} className="btn btn-secondary">
+                      <Link to={ROUTES.pictures} className="btn btn-primary">
                         + Add pictures
                       </Link>
                     </div>
