@@ -24,6 +24,7 @@ async function generateCountdownNotifications({ table, dateField, relatedColumn,
             FROM ${table} t
             WHERE t.${dateField} = CURRENT_DATE + ($4::int || ' days')::interval
             AND t.owner_user_id = $5
+            AND t.completion_status = FALSE
             AND NOT EXISTS (
                 SELECT 1 FROM notifications n
                 WHERE n.${relatedColumn} = t.id
@@ -45,6 +46,7 @@ async function generateTaskNotifications(userId) {
             SELECT $1::text, 'Your task "' || t.task_name || '" is ' || $2::text || '!', t.id, CURRENT_DATE, $4
             FROM tasks t
             WHERE t.due_date = CURRENT_DATE + ($3::int || ' days')::interval
+            AND t.completion_status = FALSE
             AND (
                 EXISTS (SELECT 1 FROM moves m WHERE m.id = t.move_id AND m.owner_user_id = $4)
                 OR EXISTS (SELECT 1 FROM trips tr WHERE tr.id = t.trip_id AND tr.owner_user_id = $4)
@@ -90,10 +92,34 @@ module.exports = {
 
             const { unreadOnly } = req.query;
             const whereClause = unreadOnly === 'true'
-                ? 'WHERE owner_user_id = $1 AND is_read = FALSE'
-                : 'WHERE owner_user_id = $1';
+                ? 'WHERE n.owner_user_id = $1 AND n.is_read = FALSE'
+                : 'WHERE n.owner_user_id = $1';
             const result = await db.query(
-                `SELECT * FROM notifications ${whereClause} ORDER BY trigger_date DESC`,
+                `SELECT n.* FROM notifications n ${whereClause}
+                AND NOT (
+                    n.type = 'move_countdown' AND EXISTS (
+                        SELECT 1 FROM moves m
+                        WHERE m.id = n.related_move_id
+                        AND m.owner_user_id = n.owner_user_id
+                        AND m.completion_status = TRUE
+                    )
+                )
+                AND NOT (
+                    n.type = 'trip_countdown' AND EXISTS (
+                        SELECT 1 FROM trips tr
+                        WHERE tr.id = n.related_trip_id
+                        AND tr.owner_user_id = n.owner_user_id
+                        AND tr.completion_status = TRUE
+                    )
+                )
+                AND NOT (
+                    n.type = 'task_due' AND EXISTS (
+                        SELECT 1 FROM tasks t
+                        WHERE t.id = n.related_task_id
+                        AND t.completion_status = TRUE
+                    )
+                )
+                ORDER BY n.trigger_date DESC`,
                 [req.user.id]
             );
             res.json(result.rows);
