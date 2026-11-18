@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import api from '../api.js';
 import NotificationBell from './Notifications.js';
@@ -5,6 +6,11 @@ import NotificationBell from './Notifications.js';
 function Navbar({ user, setUser }) {
   const navigate = useNavigate();
   const { pathname } = useLocation();
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [pathname]);
 
   const handleLogout = async () => {
     try {
@@ -23,8 +29,24 @@ function Navbar({ user, setUser }) {
         <img src="/packing-helper-logo.png" alt="" className="navbar-logo" />
         <span>Packing Helper</span>
       </Link>
-  
-      <div className="navbar-links">
+      <button
+        type="button"
+        className="navbar-toggle"
+        aria-label={menuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+        aria-expanded={menuOpen}
+        aria-controls="primary-navigation"
+        onClick={() => setMenuOpen((isOpen) => !isOpen)}
+      >
+        <span className="navbar-toggle-line" aria-hidden="true" />
+        <span className="navbar-toggle-line" aria-hidden="true" />
+        <span className="navbar-toggle-line" aria-hidden="true" />
+      </button>
+
+      <div
+        id="primary-navigation"
+        className={`navbar-links${menuOpen ? ' is-open' : ''}`}
+        onClick={() => setMenuOpen(false)}
+      >
         <NavLink
           to="/dashboard"
           className={({ isActive }) => (isActive || pathname === "/" ? "active" : undefined)}
