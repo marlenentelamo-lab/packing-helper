@@ -110,8 +110,8 @@ function MoveTripCard({
         )}
   
         <div className="mt-actions">
-          <Link to={tasksLink} className="btn btn-primary">
-            Manage tasks
+          <Link to={tasksLink} className="btn btn-edit">
+            Add tasks
           </Link>
           <Link
             to={`/pictures?${type}=${encodeURIComponent(item.id)}`}
