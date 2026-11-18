@@ -36,7 +36,8 @@ exports.signup = async (req, res) => {
       [name.trim(), email.trim().toLowerCase(), passwordHash]
     );
 
-    res.status(201).json({ user: publicUser(rows[0]), message: "Account created." });
+    req.session.user = publicUser(rows[0]);
+    res.status(201).json({ user: req.session.user, message: "Account created." });
   } catch (error) {
     if (error.code === "23505") {
       return res.status(409).json({ message: "That email is already registered." });

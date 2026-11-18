@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../api.js';
 
-function Signup() {
+function Signup({ onAuthSuccess }) {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
@@ -26,7 +26,10 @@ function Signup() {
       const response = await api.post("/signup", formData);
       setMessage(response.message || "Signed up successfully");
       setFormData({ name: "", email: "", password: "" });
-      navigate("/login");
+      if (onAuthSuccess) {
+        onAuthSuccess(response.user || null);
+      }
+      navigate("/");
     } catch (err) {
       setError(err.message);
     }

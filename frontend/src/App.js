@@ -90,7 +90,7 @@ function App() {
                 path="/signup"
                 element={
                   <PublicRoute user={user} authReady={authReady}>
-                    <Signup />
+                    <Signup onAuthSuccess={setUser} />
                   </PublicRoute>
                 }
               />
