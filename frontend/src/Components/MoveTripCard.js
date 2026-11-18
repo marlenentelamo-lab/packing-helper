@@ -109,7 +109,7 @@ function MoveTripCard({
           </Link>
         )}
   
-        <div className="mt-actions">
+        <div className="mt-actions mt-card-actions">
           <Link to={tasksLink} className="btn btn-edit">
             Add tasks
           </Link>

@@ -1614,6 +1614,27 @@ body {
   margin-left: auto;
 }
 
+.mt-card-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.mt-card-actions .btn {
+  display: flex;
+  align-self: stretch;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  height: 36px;
+  padding: 8px;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.mt-card-actions .btn-delete {
+  margin-left: 0;
+}
+
 .mt-actions a.btn {
   display: inline-flex;
   align-items: center;
