@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import { apiUrl } from '../api.js';
 
 const POLL_INTERVAL_MS = 60000;
@@ -182,7 +183,7 @@ export default function NotificationBell({
             {announcement}
           </span>
     
-          {isOpen && (
+          {isOpen && createPortal((
             <div className="notification-panel" ref={panelRef} role="menu" aria-label="Notifications">
               <div className="panel-header">
                 <span className="notif-panel-title">Notifications</span>
@@ -253,7 +254,7 @@ export default function NotificationBell({
                   })}
               </div>
             </div>
-          )}
+          ), document.body)}
         </div>
       );
     }
